@@ -33,8 +33,9 @@ export function Media({
   }
 
   if (artwork.mediaType === "gif" && artwork.fileUrl) {
-    // eslint-disable-next-line @next/next/no-img-element
     return (
+      // next/image would freeze the animation, so a raw <img> is intentional.
+      // eslint-disable-next-line @next/next/no-img-element
       <img
         className="h-full w-full object-cover"
         src={artwork.fileUrl}

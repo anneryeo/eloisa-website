@@ -1,4 +1,5 @@
 import { client } from "./client";
+import { isSanityConfigured } from "./env";
 import { sampleArtworks } from "./sampleData";
 
 export type MediaType = "image" | "video" | "gif";
@@ -41,7 +42,7 @@ const FEATURED_QUERY = `*[_type == "artwork" && featured == true] | order(order 
  * fresh clone. Once NEXT_PUBLIC_SANITY_PROJECT_ID is set, real content wins.
  */
 export async function getFeaturedArtworks(): Promise<Artwork[]> {
-  if (!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID) {
+  if (!isSanityConfigured) {
     return sampleArtworks;
   }
 

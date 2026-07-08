@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import type { Artwork } from "@/sanity/queries";
 import { ArtworkCard } from "./ArtworkCard";
 
@@ -10,9 +12,9 @@ export function Gallery({ artworks }: { artworks: Artwork[] }) {
     return (
       <p className="py-24 text-center text-muted">
         No pieces yet. Add artworks in the{" "}
-        <a href="/studio" className="underline underline-offset-4">
+        <Link href="/studio" className="underline underline-offset-4">
           Studio
-        </a>
+        </Link>
         .
       </p>
     );
