@@ -4,14 +4,14 @@ A minimalist art portfolio built for high-resolution imagery, video, GIFs, and m
 
 ## Stack
 
-| Layer      | Choice                     | Why                                                                                     |
-| ---------- | -------------------------- | --------------------------------------------------------------------------------------- |
-| Framework  | **Next.js 15 (App Router)**| `next/image` gives responsive AVIF/WebP, lazy-load, and blur placeholders out of the box |
-| Language   | **TypeScript**             | Type-safe schema + components                                                           |
-| Styling    | **Tailwind CSS**           | Minimalist white design system, utility-driven                                          |
-| Motion     | **Framer Motion**          | Hover, mouse, and per-piece animations                                                  |
-| CMS        | **Sanity**                 | On-the-fly image transforms, hotspot/crop, video + GIF assets, real-time editing        |
-| Host       | **Vercel**                 | First-party Next.js image optimization + edge caching, zero-config deploys              |
+| Layer     | Choice                            | Why                                                                                        |
+| --------- | --------------------------------- | ------------------------------------------------------------------------------------------ |
+| Framework | **Next.js 15 (App Router)** | `next/image` gives responsive AVIF/WebP, lazy-load, and blur placeholders out of the box |
+| Language  | **TypeScript**              | Type-safe schema + components                                                              |
+| Styling   | **Tailwind CSS**            | Minimalist white design system, utility-driven                                             |
+| Motion    | **Framer Motion**           | Hover, mouse, and per-piece animations                                                     |
+| CMS       | **Sanity**                  | On-the-fly image transforms, hotspot/crop, video + GIF assets, real-time editing           |
+| Host      | **Vercel**                  | First-party Next.js image optimization + edge caching, zero-config deploys                 |
 
 ## Quick start
 
@@ -21,8 +21,8 @@ cp .env.local.example .env.local   # then fill in your Sanity project values
 npm run dev
 ```
 
-- App: <http://localhost:3000>
-- Sanity Studio (embedded): <http://localhost:3000/studio>
+- App: [http://localhost:3000](http://localhost:3000)
+- Sanity Studio (embedded): [http://localhost:3000/studio](http://localhost:3000/studio)
 
 ## Documentation
 
