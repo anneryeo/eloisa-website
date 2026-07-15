@@ -61,9 +61,13 @@ function NavDisclosure({
 }) {
   const [open, setOpen] = useState(false);
 
-  // Once you're inside the section the disclosure stays open, so the current
-  // page is always reachable in the nav. On the landing page it starts closed.
-  const inSection = pathname.startsWith(`${section.href.replace(/\/$/, "")}/`);
+  // Once you're on one of the children the disclosure stays open, so the
+  // current page is always reachable in the nav. Matching against the children
+  // rather than the section's own href matters: Work's href is "/", and every
+  // path starts with "/" — testing that would pin it open on the landing page,
+  // which is exactly where the brief wants it closed.
+  const inSection =
+    section.children?.some((child) => pathname === child.href) ?? false;
   const expanded = open || inSection;
 
   return (
