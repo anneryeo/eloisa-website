@@ -73,6 +73,22 @@ export const artwork = defineType({
       hidden: ({ parent }) => parent?.mediaType !== "gif",
     }),
     defineField({
+      name: "workType",
+      title: "Work type",
+      description:
+        "Which list this piece appears under when Work is expanded in the nav.",
+      type: "string",
+      options: {
+        list: [
+          { title: "Personal", value: "personal" },
+          { title: "Professional", value: "professional" },
+        ],
+        layout: "radio",
+      },
+      initialValue: "professional",
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
       name: "category",
       title: "Category",
       type: "reference",
