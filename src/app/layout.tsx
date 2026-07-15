@@ -21,7 +21,10 @@ const sans = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Eloisa Claire Design",
+  title: {
+    default: "Eloisa Claire Design",
+    template: "%s — Eloisa Claire Design",
+  },
   description:
     "Eloisa Claire is a marketing-led graphic designer and creative storyteller focused on colorful visual direction and campaign-driven design based in Manila, Philippines.",
 };
