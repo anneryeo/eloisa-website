@@ -15,6 +15,7 @@ next-env.d.ts
 # Environment variables (never commit secrets)
 .env
 .env*.local
+.env.local
 
 # Sanity
 /dist
