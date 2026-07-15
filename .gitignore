@@ -38,3 +38,6 @@ Thumbs.db
 .idea
 .vscode/*
 !.vscode/extensions.json
+
+# Untracked scaffold — kept on disk, not part of this app
+/web/
