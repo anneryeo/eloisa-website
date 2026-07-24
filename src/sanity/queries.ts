@@ -76,3 +76,90 @@ export function getFeaturedWork(): Promise<Artwork[]> {
 export function getWorkByType(workType: WorkType): Promise<Artwork[]> {
   return fetchWork(" && workType == $workType", { workType });
 }
+
+export interface JournalEntry {
+  _id: string;
+  title: string;
+  slug: string;
+  year: number;
+  role: string;
+  coverImage?: unknown;
+  /** width ÷ height of the cover, used to shape the grid tile. */
+  coverAspectRatio?: number;
+  gallery?: { _key: string; image: unknown; aspectRatio?: number }[];
+  blurb?: string;
+  note?: string;
+}
+
+/** Journal entries in grid order; [] when Sanity is unreachable or empty. */
+export async function getJournalEntries(): Promise<JournalEntry[]> {
+  if (!isSanityConfigured) return [];
+
+  try {
+    return await client.fetch<JournalEntry[]>(
+      `*[_type == "journalEntry"] | order(order asc){
+        _id,
+        title,
+        "slug": slug.current,
+        year,
+        role,
+        coverImage,
+        "coverAspectRatio": coverImage.asset->metadata.dimensions.aspectRatio,
+        "gallery": gallery[]{
+          _key,
+          "image": @,
+          "aspectRatio": asset->metadata.dimensions.aspectRatio
+        },
+        blurb,
+        note
+      }`,
+    );
+  } catch {
+    return [];
+  }
+}
+
+export interface FaqItem {
+  _id: string;
+  question: string;
+  answer: string;
+}
+
+/** FAQ items in page order; [] when Sanity is unreachable or empty. */
+export async function getFaqItems(): Promise<FaqItem[]> {
+  if (!isSanityConfigured) return [];
+
+  try {
+    return await client.fetch<FaqItem[]>(
+      `*[_type == "faqItem"] | order(order asc){ _id, question, answer }`,
+    );
+  } catch {
+    return [];
+  }
+}
+
+export interface AboutPage {
+  heading: string;
+  portrait?: unknown;
+  portraitAspectRatio?: number;
+  /** Portable Text blocks — the comp italicizes handle names inside the bio. */
+  bio?: unknown[];
+}
+
+/** The About Me singleton; null when Sanity is unreachable or empty. */
+export async function getAboutPage(): Promise<AboutPage | null> {
+  if (!isSanityConfigured) return null;
+
+  try {
+    return await client.fetch<AboutPage | null>(
+      `*[_type == "aboutPage"][0]{
+        heading,
+        portrait,
+        "portraitAspectRatio": portrait.asset->metadata.dimensions.aspectRatio,
+        bio
+      }`,
+    );
+  } catch {
+    return null;
+  }
+}
