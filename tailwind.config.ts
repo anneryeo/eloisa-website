@@ -22,6 +22,7 @@ const config: Config = {
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
         display: ["var(--font-display)", "cursive"],
+        mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
       transitionTimingFunction: {
         gallery: "cubic-bezier(0.16, 1, 0.3, 1)",

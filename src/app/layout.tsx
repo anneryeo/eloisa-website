@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Architects_Daughter, Poppins } from "next/font/google";
+import { Architects_Daughter, Poppins, Space_Mono } from "next/font/google";
 
 import "./globals.css";
 
@@ -10,6 +10,15 @@ const display = Architects_Daughter({
   subsets: ["latin"],
   weight: "400",
   variable: "--font-display",
+  display: "swap",
+});
+
+// Journal captions and the About greeting are set in a typewriter mono in the
+// comps; Space Mono is the closest free face.
+const mono = Space_Mono({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-mono",
   display: "swap",
 });
 
@@ -33,7 +42,10 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${display.variable} ${sans.variable}`}>
+    <html
+      lang="en"
+      className={`${display.variable} ${sans.variable} ${mono.variable}`}
+    >
       <body className="min-h-screen bg-canvas font-sans text-ink antialiased">
         {children}
       </body>

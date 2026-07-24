@@ -9,6 +9,9 @@ import { NAV_SECTIONS, type NavSection } from "./navigation";
 
 const ITEM = "block uppercase transition-colors duration-200";
 
+/** Sub-links render lowercase in the comps ("personal", "work work"). */
+const CHILD_ITEM = "block transition-colors duration-200";
+
 export function SiteNav() {
   const pathname = usePathname();
 
@@ -106,7 +109,7 @@ function NavDisclosure({
                 aria-hidden={expanded ? undefined : true}
                 aria-current={pathname === child.href ? "page" : undefined}
                 className={cx(
-                  ITEM,
+                  CHILD_ITEM,
                   "text-accent",
                   pathname === child.href ? "underline underline-offset-4" : "",
                 )}
