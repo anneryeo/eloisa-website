@@ -1,5 +1,5 @@
 import { JournalExplorer } from "@/components/journal/JournalExplorer";
-import { getJournalEntries } from "@/sanity/queries";
+import { getJournalEntries, getSiteSettings } from "@/sanity/queries";
 
 export const metadata = { title: "Journal" };
 export const revalidate = 3600;
@@ -14,10 +14,17 @@ export default async function JournalPage({
 }: {
   searchParams: Promise<{ e?: string }>;
 }) {
-  const [entries, params] = await Promise.all([
+  const [entries, settings, params] = await Promise.all([
     getJournalEntries(),
+    getSiteSettings(),
     searchParams,
   ]);
 
-  return <JournalExplorer entries={entries} initialSlug={params.e ?? null} />;
+  return (
+    <JournalExplorer
+      entries={entries}
+      intro={settings?.journalIntro}
+      initialSlug={params.e ?? null}
+    />
+  );
 }

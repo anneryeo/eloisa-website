@@ -7,8 +7,8 @@ import { useCallback, useEffect, useState } from "react";
 import { urlForImage } from "@/sanity/image";
 import type { JournalEntry } from "@/sanity/queries";
 
-/** Intro copy, verbatim from the comp's left column. */
-const INTRO = [
+/** Comp copy fallback, used when the CMS settings document has no intro. */
+const FALLBACK_INTRO = [
   "From workshops to campus talks, Eloisa Claire loves showing up for student communities.",
   "As a student herself she enjoys sharing lessons, experiences, and creative insights that encourage fellow students to pursue bold ideas and colorful careers.",
   "Click to see what she's been up to recently ˙ᵕ˙",
@@ -27,9 +27,11 @@ const EASE = [0.16, 1, 0.3, 1] as const;
  */
 export function JournalExplorer({
   entries,
+  intro,
   initialSlug,
 }: {
   entries: JournalEntry[];
+  intro?: string[];
   initialSlug: string | null;
 }) {
   const [activeSlug, setActiveSlug] = useState(initialSlug);
@@ -58,7 +60,7 @@ export function JournalExplorer({
   if (entries.length === 0) {
     return (
       <>
-        <JournalIntro />
+        <JournalIntro paragraphs={intro} />
         <p className="sr-only">No journal entries have been published yet.</p>
         <div
           className="grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3"
@@ -87,7 +89,7 @@ export function JournalExplorer({
           animate={{ opacity: 1, transition: { duration: 0.35, ease: EASE } }}
           exit={{ opacity: 0, transition: { duration: 0.2 } }}
         >
-          <JournalIntro />
+          <JournalIntro paragraphs={intro} />
           <div className="grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
             {entries.map((entry, index) => (
               <JournalTile
@@ -104,10 +106,11 @@ export function JournalExplorer({
   );
 }
 
-function JournalIntro() {
+function JournalIntro({ paragraphs }: { paragraphs?: string[] }) {
+  const lines = paragraphs?.length ? paragraphs : FALLBACK_INTRO;
   return (
     <div className="mb-10 max-w-[44ch] space-y-4 text-[0.8125rem] font-light leading-[1.9] text-ink">
-      {INTRO.map((line) => (
+      {lines.map((line) => (
         <p key={line}>{line}</p>
       ))}
     </div>

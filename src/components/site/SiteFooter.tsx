@@ -1,13 +1,22 @@
-/** Sidebar footer — handle and contact email, pinned to the bottom of the rail. */
-export function SiteFooter() {
+/** Sidebar footer — handle, site, and contact email, editable in the Studio. */
+export function SiteFooter({
+  handle = "eloisaclairedesign",
+  website,
+  email = "hello@eloisaclaire.com",
+}: {
+  handle?: string;
+  website?: string;
+  email?: string;
+}) {
   return (
     <footer className="text-[0.6875rem] font-light leading-relaxed text-ink">
-      <p>eloisaclairedesign</p>
+      <p>{handle}</p>
+      {website && <p>{website}</p>}
       <a
-        href="mailto:hello@eloisaclaire.com"
+        href={`mailto:${email}`}
         className="transition-colors duration-200 hover:text-accent"
       >
-        hello@eloisaclaire.com
+        {email}
       </a>
     </footer>
   );

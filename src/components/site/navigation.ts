@@ -18,11 +18,11 @@ export const NAV_SECTIONS: NavSection[] = [
   {
     label: "Work",
     href: "/",
-    // The comps label the sub-lists in lowercase: "personal" and "work work"
-    // (the client's name for commissioned work). Routes keep neutral slugs.
+    // Sub-lists render lowercase per the comps. The comps drafted the second
+    // list as "work work", but the client settled on "professional".
     children: [
       { label: "personal", href: "/work/personal" },
-      { label: "work work", href: "/work/professional" },
+      { label: "professional", href: "/work/professional" },
     ],
   },
   { label: "About Me", href: "/about" },
