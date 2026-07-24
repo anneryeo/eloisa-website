@@ -1,0 +1,272 @@
+"use client";
+
+import { AnimatePresence, motion } from "framer-motion";
+import Image from "next/image";
+import { useCallback, useEffect, useState } from "react";
+
+import { urlForImage } from "@/sanity/image";
+import type { JournalEntry } from "@/sanity/queries";
+
+/** Intro copy, verbatim from the comp's left column. */
+const INTRO = [
+  "From workshops to campus talks, Eloisa Claire loves showing up for student communities.",
+  "As a student herself she enjoys sharing lessons, experiences, and creative insights that encourage fellow students to pursue bold ideas and colorful careers.",
+  "Click to see what she's been up to recently ˙ᵕ˙",
+];
+
+/** Cover shapes for the gray placeholders shown while the CMS is empty. */
+const PLACEHOLDER_RATIOS = [0.79, 1.24, 0.72, 0.9, 0.86];
+
+const EASE = [0.16, 1, 0.3, 1] as const;
+
+/**
+ * The Journal in one client component so opening an entry can morph the
+ * clicked cover into the detail view (framer-motion layoutId) instead of
+ * doing a hard route change. The URL still tracks the open entry via
+ * `?e=slug` (history.pushState) so back/forward and deep links work.
+ */
+export function JournalExplorer({
+  entries,
+  initialSlug,
+}: {
+  entries: JournalEntry[];
+  initialSlug: string | null;
+}) {
+  const [activeSlug, setActiveSlug] = useState(initialSlug);
+  const active = entries.find((entry) => entry.slug === activeSlug) ?? null;
+
+  const open = useCallback((slug: string) => {
+    window.history.pushState(null, "", `/journal?e=${encodeURIComponent(slug)}`);
+    setActiveSlug(slug);
+  }, []);
+
+  const close = useCallback(() => {
+    window.history.pushState(null, "", "/journal");
+    setActiveSlug(null);
+  }, []);
+
+  // Keep state in sync when the user drives the browser's back/forward.
+  useEffect(() => {
+    const onPopState = () => {
+      const params = new URLSearchParams(window.location.search);
+      setActiveSlug(params.get("e"));
+    };
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
+
+  if (entries.length === 0) {
+    return (
+      <>
+        <JournalIntro />
+        <p className="sr-only">No journal entries have been published yet.</p>
+        <div
+          className="grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3"
+          aria-hidden="true"
+        >
+          {PLACEHOLDER_RATIOS.map((ratio, index) => (
+            <div
+              key={index}
+              className="w-full bg-placeholder"
+              style={{ aspectRatio: ratio }}
+            />
+          ))}
+        </div>
+      </>
+    );
+  }
+
+  return (
+    <AnimatePresence mode="popLayout" initial={false}>
+      {active ? (
+        <JournalDetail key={active.slug} entry={active} onClose={close} />
+      ) : (
+        <motion.div
+          key="grid"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1, transition: { duration: 0.35, ease: EASE } }}
+          exit={{ opacity: 0, transition: { duration: 0.2 } }}
+        >
+          <JournalIntro />
+          <div className="grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+            {entries.map((entry) => (
+              <JournalTile
+                key={entry._id}
+                entry={entry}
+                onOpen={() => open(entry.slug)}
+              />
+            ))}
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+function JournalIntro() {
+  return (
+    <div className="mb-10 max-w-[44ch] space-y-4 text-[0.8125rem] font-light leading-[1.9] text-ink">
+      {INTRO.map((line) => (
+        <p key={line}>{line}</p>
+      ))}
+    </div>
+  );
+}
+
+/** One snapshot in the grid with its "SCHOOL, YEAR / role" mono caption. */
+function JournalTile({
+  entry,
+  onOpen,
+}: {
+  entry: JournalEntry;
+  onOpen: () => void;
+}) {
+  const src = entry.coverImage
+    ? urlForImage(entry.coverImage).width(900).url()
+    : null;
+
+  return (
+    <figure>
+      <button
+        type="button"
+        onClick={onOpen}
+        style={{ aspectRatio: entry.coverAspectRatio ?? 0.8 }}
+        className="relative block w-full overflow-hidden outline-offset-4 transition-opacity duration-300 ease-gallery hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+      >
+        {src && (
+          <motion.div
+            layoutId={`journal-cover-${entry.slug}`}
+            className="absolute inset-0"
+            transition={{ duration: 0.45, ease: EASE }}
+          >
+            <Image
+              src={src}
+              alt={`${entry.title}, ${entry.year} — ${entry.role}`}
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              className="object-contain"
+            />
+          </motion.div>
+        )}
+        <span className="sr-only">
+          Open {entry.title}, {entry.year}
+        </span>
+      </button>
+      <figcaption className="mt-3 font-mono">
+        <p className="text-[0.9375rem] font-bold uppercase tracking-[0.02em] text-ink">
+          {entry.title}, {entry.year}
+        </p>
+        <p className="mt-0.5 text-[0.6875rem] text-ink">{entry.role}</p>
+      </figcaption>
+    </figure>
+  );
+}
+
+/** An opened entry — cover morphs in, posters and photos follow. */
+function JournalDetail({
+  entry,
+  onClose,
+}: {
+  entry: JournalEntry;
+  onClose: () => void;
+}) {
+  const coverSrc = entry.coverImage
+    ? urlForImage(entry.coverImage).width(1200).url()
+    : null;
+
+  // Close on Escape, matching the Work lightbox.
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [onClose]);
+
+  return (
+    <motion.article
+      key={entry.slug}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1, transition: { duration: 0.35, ease: EASE } }}
+      exit={{ opacity: 0, transition: { duration: 0.2 } }}
+    >
+      <button
+        type="button"
+        onClick={onClose}
+        className="mb-8 font-mono text-[0.6875rem] uppercase tracking-[0.05em] text-ink transition-colors hover:text-accent"
+      >
+        &larr; Back to Journal
+      </button>
+
+      <header className="mb-6 font-mono">
+        <h1 className="text-[1.0625rem] font-bold uppercase tracking-[0.02em] text-ink">
+          {entry.title}, {entry.year}
+        </h1>
+        <p className="mt-0.5 text-[0.75rem] text-ink">{entry.role}</p>
+      </header>
+
+      <div className="flex flex-wrap items-start gap-6">
+        {coverSrc && (
+          <motion.div
+            layoutId={`journal-cover-${entry.slug}`}
+            transition={{ duration: 0.45, ease: EASE }}
+            className="relative w-full max-w-[260px]"
+            style={{ aspectRatio: entry.coverAspectRatio ?? 0.8 }}
+          >
+            <Image
+              src={coverSrc}
+              alt={`${entry.title}, ${entry.year} — ${entry.role}`}
+              fill
+              sizes="260px"
+              className="object-contain"
+              priority
+            />
+          </motion.div>
+        )}
+
+        {entry.gallery?.map((item, index) =>
+          item.image ? (
+            <motion.figure
+              key={item._key}
+              initial={{ opacity: 0, y: 14 }}
+              animate={{
+                opacity: 1,
+                y: 0,
+                transition: {
+                  duration: 0.45,
+                  ease: EASE,
+                  delay: 0.12 + index * 0.06,
+                },
+              }}
+              className="relative w-full max-w-[340px]"
+              style={{ aspectRatio: item.aspectRatio ?? 0.8 }}
+            >
+              <Image
+                src={urlForImage(item.image).width(1200).url()}
+                alt={`${entry.title}, ${entry.year} — photo ${index + 1}`}
+                fill
+                sizes="(max-width: 640px) 100vw, 340px"
+                className="object-contain"
+              />
+            </motion.figure>
+          ) : null,
+        )}
+      </div>
+
+      {(entry.blurb || entry.note) && (
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{
+            opacity: 1,
+            y: 0,
+            transition: { duration: 0.45, ease: EASE, delay: 0.25 },
+          }}
+          className="mt-8 max-w-[52ch] space-y-4 text-[0.8125rem] font-light leading-[1.9] text-ink"
+        >
+          {entry.blurb && <p className="italic">{entry.blurb}</p>}
+          {entry.note && <p>{entry.note}</p>}
+        </motion.div>
+      )}
+    </motion.article>
+  );
+}
