@@ -89,10 +89,11 @@ export function JournalExplorer({
         >
           <JournalIntro />
           <div className="grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-            {entries.map((entry) => (
+            {entries.map((entry, index) => (
               <JournalTile
                 key={entry._id}
                 entry={entry}
+                priority={index < 3}
                 onOpen={() => open(entry.slug)}
               />
             ))}
@@ -116,9 +117,11 @@ function JournalIntro() {
 /** One snapshot in the grid with its "SCHOOL, YEAR / role" mono caption. */
 function JournalTile({
   entry,
+  priority = false,
   onOpen,
 }: {
   entry: JournalEntry;
+  priority?: boolean;
   onOpen: () => void;
 }) {
   const src = entry.coverImage
@@ -145,6 +148,7 @@ function JournalTile({
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               className="object-contain"
+              priority={priority}
             />
           </motion.div>
         )}
