@@ -42,7 +42,7 @@ export default async function AboutMePage() {
     <div className="grid gap-10 md:grid-cols-[minmax(0,340px)_minmax(0,1fr)] md:gap-16">
       {portraitUrl ? (
         <figure
-          className="relative w-full max-w-[340px] overflow-hidden bg-placeholder"
+          className="relative w-full max-w-[340px] overflow-hidden bg-placeholder transition-transform duration-300 ease-gallery hover:-rotate-1 hover:scale-[1.02]"
           style={{ aspectRatio: about?.portraitAspectRatio ?? 0.82 }}
         >
           <Image

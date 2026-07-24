@@ -1,11 +1,13 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 
+import { WorkLightbox } from "@/components/work/WorkLightbox";
+import { SCRAPBOOK_SPRING, scrapbookTilt } from "@/components/work/WorkTile";
 import { urlForImage } from "@/sanity/image";
-import type { JournalEntry } from "@/sanity/queries";
+import type { Artwork, JournalEntry } from "@/sanity/queries";
 
 /** Comp copy fallback, used when the CMS settings document has no intro. */
 const FALLBACK_INTRO = [
@@ -127,17 +129,25 @@ function JournalTile({
   priority?: boolean;
   onOpen: () => void;
 }) {
+  const reducedMotion = useReducedMotion();
   const src = entry.coverImage
     ? urlForImage(entry.coverImage).width(900).url()
     : null;
 
   return (
     <figure>
-      <button
+      <motion.button
         type="button"
         onClick={onOpen}
+        whileHover={
+          reducedMotion
+            ? undefined
+            : { rotate: scrapbookTilt(entry.slug), scale: 1.03, y: -5 }
+        }
+        whileTap={reducedMotion ? undefined : { scale: 0.98 }}
+        transition={SCRAPBOOK_SPRING}
         style={{ aspectRatio: entry.coverAspectRatio ?? 0.8 }}
-        className="relative block w-full overflow-hidden outline-offset-4 transition-opacity duration-300 ease-gallery hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+        className="relative block w-full outline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
       >
         {src && (
           <motion.div
@@ -158,7 +168,7 @@ function JournalTile({
         <span className="sr-only">
           Open {entry.title}, {entry.year}
         </span>
-      </button>
+      </motion.button>
       <figcaption className="mt-3 font-mono">
         <p className="text-[0.9375rem] font-bold uppercase tracking-[0.02em] text-ink">
           {entry.title}, {entry.year}
@@ -177,18 +187,55 @@ function JournalDetail({
   entry: JournalEntry;
   onClose: () => void;
 }) {
+  const reducedMotion = useReducedMotion();
   const coverSrc = entry.coverImage
     ? urlForImage(entry.coverImage).width(1200).url()
     : null;
 
-  // Close on Escape, matching the Work lightbox.
+  // The entry's photos (cover + gallery) as Artwork-shaped records, so the
+  // Work lightbox can page prev/next through them like a Work list.
+  const photos: Artwork[] = [
+    ...(entry.coverImage
+      ? [
+          {
+            _id: `${entry.slug}-cover`,
+            title: `${entry.title}, ${entry.year}`,
+            slug: entry.slug,
+            mediaType: "image" as const,
+            image: entry.coverImage,
+            aspectRatio: entry.coverAspectRatio,
+          },
+        ]
+      : []),
+    ...(entry.gallery ?? [])
+      .filter((item) => item.image)
+      .map((item, index) => ({
+        _id: `${entry.slug}-${item._key}`,
+        title: `${entry.title}, ${entry.year} — photo ${index + 1}`,
+        slug: entry.slug,
+        mediaType: "image" as const,
+        image: item.image,
+        aspectRatio: item.aspectRatio,
+      })),
+  ];
+
+  // Index into `photos` when the lightbox is open.
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const pageLightbox = (step: number) =>
+    setLightboxIndex((index) =>
+      index === null ? index : (index + step + photos.length) % photos.length,
+    );
+
+  // Close on Escape, matching the Work lightbox — but only while the
+  // lightbox isn't open (it handles its own Escape and stops there).
   useEffect(() => {
+    if (lightboxIndex !== null) return;
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") onClose();
     };
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
-  }, [onClose]);
+  }, [onClose, lightboxIndex]);
 
   return (
     <motion.article
@@ -214,10 +261,22 @@ function JournalDetail({
 
       <div className="flex flex-wrap items-start gap-6">
         {coverSrc && (
-          <motion.div
+          <motion.button
+            type="button"
+            onClick={() => setLightboxIndex(0)}
             layoutId={`journal-cover-${entry.slug}`}
-            transition={{ duration: 0.45, ease: EASE }}
-            className="relative w-full max-w-[260px]"
+            whileHover={
+              reducedMotion
+                ? undefined
+                : {
+                    rotate: scrapbookTilt(`${entry.slug}-cover`),
+                    scale: 1.03,
+                    y: -5,
+                  }
+            }
+            whileTap={reducedMotion ? undefined : { scale: 0.98 }}
+            transition={SCRAPBOOK_SPRING}
+            className="relative w-full max-w-[260px] outline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
             style={{ aspectRatio: entry.coverAspectRatio ?? 0.8 }}
           >
             <Image
@@ -228,13 +287,16 @@ function JournalDetail({
               className="object-contain"
               priority
             />
-          </motion.div>
+            <span className="sr-only">View photo at full size</span>
+          </motion.button>
         )}
 
         {entry.gallery?.map((item, index) =>
           item.image ? (
-            <motion.figure
+            <motion.button
+              type="button"
               key={item._key}
+              onClick={() => setLightboxIndex(entry.coverImage ? index + 1 : index)}
               initial={{ opacity: 0, y: 14 }}
               animate={{
                 opacity: 1,
@@ -245,7 +307,13 @@ function JournalDetail({
                   delay: 0.12 + index * 0.06,
                 },
               }}
-              className="relative w-full max-w-[340px]"
+              whileHover={
+                reducedMotion
+                  ? undefined
+                  : { rotate: scrapbookTilt(item._key), scale: 1.03, y: -5 }
+              }
+              whileTap={reducedMotion ? undefined : { scale: 0.98 }}
+              className="relative w-full max-w-[340px] outline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
               style={{ aspectRatio: item.aspectRatio ?? 0.8 }}
             >
               <Image
@@ -255,10 +323,22 @@ function JournalDetail({
                 sizes="(max-width: 640px) 100vw, 340px"
                 className="object-contain"
               />
-            </motion.figure>
+              <span className="sr-only">View photo at full size</span>
+            </motion.button>
           ) : null,
         )}
       </div>
+
+      <AnimatePresence>
+        {lightboxIndex !== null && photos[lightboxIndex] && (
+          <WorkLightbox
+            piece={photos[lightboxIndex]}
+            onClose={() => setLightboxIndex(null)}
+            onPrev={photos.length > 1 ? () => pageLightbox(-1) : undefined}
+            onNext={photos.length > 1 ? () => pageLightbox(1) : undefined}
+          />
+        )}
+      </AnimatePresence>
 
       {(entry.blurb || entry.note) && (
         <motion.div
