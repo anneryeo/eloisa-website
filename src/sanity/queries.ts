@@ -146,6 +146,42 @@ export interface AboutPage {
   bio?: unknown[];
 }
 
+export interface SiteSettings {
+  /** Wordmark lettering frames, already resolved for the sidebar cycler. */
+  wordmarkFrames?: { _key: string; image: unknown; aspectRatio?: number }[];
+  wordmarkInterval?: number;
+  bio?: string;
+  footerHandle?: string;
+  footerWebsite?: string;
+  footerEmail?: string;
+  journalIntro?: string[];
+}
+
+/** Site-wide chrome singleton; null when Sanity is unreachable or empty. */
+export async function getSiteSettings(): Promise<SiteSettings | null> {
+  if (!isSanityConfigured) return null;
+
+  try {
+    return await client.fetch<SiteSettings | null>(
+      `*[_type == "siteSettings"][0]{
+        "wordmarkFrames": wordmarkFrames[]{
+          _key,
+          "image": @,
+          "aspectRatio": asset->metadata.dimensions.aspectRatio
+        },
+        wordmarkInterval,
+        bio,
+        footerHandle,
+        footerWebsite,
+        footerEmail,
+        journalIntro
+      }`,
+    );
+  } catch {
+    return null;
+  }
+}
+
 /** The About Me singleton; null when Sanity is unreachable or empty. */
 export async function getAboutPage(): Promise<AboutPage | null> {
   if (!isSanityConfigured) return null;

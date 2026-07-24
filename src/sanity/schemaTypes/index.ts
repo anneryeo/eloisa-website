@@ -5,7 +5,8 @@ import { artwork } from "./artwork";
 import { category } from "./category";
 import { faqItem } from "./faqItem";
 import { journalEntry } from "./journalEntry";
+import { siteSettings } from "./siteSettings";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
-  types: [artwork, category, journalEntry, faqItem, aboutPage],
+  types: [artwork, category, journalEntry, faqItem, aboutPage, siteSettings],
 };
