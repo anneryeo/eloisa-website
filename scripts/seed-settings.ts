@@ -19,21 +19,14 @@ if (!ASSET_DIR) {
 
 const client = getCliClient({ apiVersion: "2024-10-01" });
 
-/** Cycle order — classic mark first, then the louder lettering studies. */
+/**
+ * Cycle order — the classic handwritten mark and the pink hearts version.
+ * The other lettering studies on the board only exist at thumbnail size, so
+ * they stay out until crisp exports are uploaded through the Studio.
+ */
 const FRAME_FILES = [
   "wordmark-handwritten.png",
-  "wordmark-heart.png",
-  "wordmark-groovy.png",
-  "wordmark-serif.png",
-  "wordmark-blobby.png",
-  "wordmark-lowercase.png",
-  "wordmark-heavy.png",
   "wordmark-pink-script.png",
-  "wordmark-deco.png",
-  "wordmark-wavy.png",
-  "wordmark-rounded.png",
-  "wordmark-italic.png",
-  "wordmark-brush.png",
 ];
 
 async function run() {
