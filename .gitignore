@@ -19,6 +19,7 @@ next-env.d.ts
 
 # Sanity
 /dist
+/.sanity
 
 # Debug logs
 npm-debug.log*
