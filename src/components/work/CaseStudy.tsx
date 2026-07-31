@@ -130,23 +130,30 @@ export function CaseStudy({
         <p className="text-[0.6875rem] font-medium uppercase tracking-[0.05em]">
           {project.projectLabel ?? "WORK"}
         </p>
-        {project.description && (
+        {(project.descriptionAbove ?? project.description) && (
           <p className="max-w-4xl pt-2 text-sm font-light leading-7">
-            {project.description}
+            {project.descriptionAbove ?? project.description}
           </p>
         )}
       </header>
 
       <div className="space-y-16 md:space-y-24">
         {Boolean(hero) && (
-          <ScrapbookImage
-            src={imageUrl(hero)}
-            alt={project.title}
-            ratio={project.heroAspectRatio ?? project.aspectRatio ?? 1.5}
-            seed={`${project._id}-hero`}
-            priority
-            subtle
-          />
+          <section className="space-y-7">
+            <ScrapbookImage
+              src={imageUrl(hero)}
+              alt={project.title}
+              ratio={project.heroAspectRatio ?? project.aspectRatio ?? 1.5}
+              seed={`${project._id}-hero`}
+              priority
+              subtle
+            />
+            {project.descriptionBelow && (
+              <p className="max-w-3xl whitespace-pre-line text-sm font-light leading-7">
+                {project.descriptionBelow}
+              </p>
+            )}
+          </section>
         )}
 
         {project.caseStudySections?.map((section) => (

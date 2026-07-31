@@ -21,6 +21,8 @@ export interface Artwork {
   medium?: string;
   dimensions?: string;
   description?: string;
+  descriptionAbove?: string;
+  descriptionBelow?: string;
   projectLabel?: string;
   heroImage?: unknown;
   heroAspectRatio?: number;
@@ -67,6 +69,8 @@ const FIELDS = `
 const CASE_STUDY_FIELDS = `
   ${FIELDS},
   "projectLabel": coalesce(projectLabel, "WORK"),
+  "descriptionAbove": coalesce(descriptionAbove, description),
+  descriptionBelow,
   "heroImage": coalesce(heroImage, image, poster),
   "heroAspectRatio": coalesce(
     heroImage.asset->metadata.dimensions.aspectRatio,

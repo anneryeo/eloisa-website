@@ -114,9 +114,25 @@ export const artwork = defineType({
     }),
     defineField({
       name: "description",
-      title: "Description",
+      title: "Description (legacy)",
+      description:
+        "Existing project description. Used above the artwork when the new field below is empty.",
       type: "text",
       rows: 4,
+    }),
+    defineField({
+      name: "descriptionAbove",
+      title: "Description above artwork",
+      description: "Optional introduction shown between the project title and hero artwork.",
+      type: "text",
+      rows: 5,
+    }),
+    defineField({
+      name: "descriptionBelow",
+      title: "Description below artwork",
+      description: "Optional closing description shown immediately below the hero artwork.",
+      type: "text",
+      rows: 5,
     }),
     defineField({
       name: "projectLabel",
