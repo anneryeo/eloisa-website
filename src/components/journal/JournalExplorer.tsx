@@ -38,6 +38,9 @@ export function JournalExplorer({
 }) {
   const [activeSlug, setActiveSlug] = useState(initialSlug);
   const active = entries.find((entry) => entry.slug === activeSlug) ?? null;
+  const activeIndex = active
+    ? entries.findIndex((entry) => entry.slug === active.slug)
+    : -1;
 
   const open = useCallback((slug: string) => {
     window.history.pushState(null, "", `/journal?e=${encodeURIComponent(slug)}`);
@@ -83,7 +86,25 @@ export function JournalExplorer({
   return (
     <AnimatePresence mode="popLayout" initial={false}>
       {active ? (
-        <JournalDetail key={active.slug} entry={active} onClose={close} />
+        <JournalDetail
+          key={active.slug}
+          entry={active}
+          onClose={close}
+          onPrevious={
+            entries.length > 1
+              ? () =>
+                  open(
+                    entries[(activeIndex - 1 + entries.length) % entries.length]
+                      .slug,
+                  )
+              : undefined
+          }
+          onNext={
+            entries.length > 1
+              ? () => open(entries[(activeIndex + 1) % entries.length].slug)
+              : undefined
+          }
+        />
       ) : (
         <motion.div
           key="grid"
@@ -183,9 +204,13 @@ function JournalTile({
 function JournalDetail({
   entry,
   onClose,
+  onPrevious,
+  onNext,
 }: {
   entry: JournalEntry;
   onClose: () => void;
+  onPrevious?: () => void;
+  onNext?: () => void;
 }) {
   const reducedMotion = useReducedMotion();
   const coverSrc = entry.coverImage
@@ -244,13 +269,38 @@ function JournalDetail({
       animate={{ opacity: 1, transition: { duration: 0.35, ease: EASE } }}
       exit={{ opacity: 0, transition: { duration: 0.2 } }}
     >
-      <button
-        type="button"
-        onClick={onClose}
-        className="mb-8 font-mono text-[0.6875rem] uppercase tracking-[0.05em] text-ink transition-colors hover:text-accent"
+      <nav
+        aria-label="Journal entry navigation"
+        className="mb-8 flex items-center justify-between font-mono text-[0.6875rem] uppercase tracking-[0.05em]"
       >
-        &larr; Back to Journal
-      </button>
+        <button
+          type="button"
+          onClick={onClose}
+          className="text-ink transition-colors hover:text-accent"
+        >
+          &larr; Back to Journal
+        </button>
+        <div className="flex gap-6 text-muted">
+          {onPrevious && (
+            <button
+              type="button"
+              onClick={onPrevious}
+              className="transition-colors hover:text-accent"
+            >
+              &lt; Prev
+            </button>
+          )}
+          {onNext && (
+            <button
+              type="button"
+              onClick={onNext}
+              className="transition-colors hover:text-accent"
+            >
+              Next &gt;
+            </button>
+          )}
+        </div>
+      </nav>
 
       <header className="mb-6 font-mono">
         <h1 className="text-[1.0625rem] font-bold uppercase tracking-[0.02em] text-ink">
