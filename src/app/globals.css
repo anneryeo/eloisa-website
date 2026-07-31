@@ -43,8 +43,8 @@ body {
   }
   to {
     opacity: 0;
-    transform: translate(calc(-50% + var(--sparkle-x)), -28px) scale(0.3)
-      rotate(80deg);
+    transform: translate(calc(-50% + var(--sparkle-x)), 42px) scale(0.3)
+      rotate(110deg);
   }
 }
 
