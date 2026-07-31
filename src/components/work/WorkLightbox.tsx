@@ -111,7 +111,7 @@ export function WorkLightbox({
         transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
         onClick={(event) => event.stopPropagation()}
       >
-        <Media artwork={piece} priority />
+        <Media artwork={piece} priority fullResolution />
       </motion.figure>
     </motion.div>
   );

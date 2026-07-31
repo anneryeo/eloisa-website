@@ -14,9 +14,11 @@ import { urlForImage } from "@/sanity/image";
 export function Media({
   artwork,
   priority = false,
+  fullResolution = false,
 }: {
   artwork: Artwork;
   priority?: boolean;
+  fullResolution?: boolean;
 }) {
   if (artwork.mediaType === "video" && artwork.fileUrl) {
     return (
@@ -47,7 +49,9 @@ export function Media({
 
   // Image piece. Prefer a real Sanity asset; fall back to the sample data URI.
   const src = artwork.image
-    ? urlForImage(artwork.image).width(1600).url()
+    ? fullResolution
+      ? urlForImage(artwork.image).url()
+      : urlForImage(artwork.image).width(1600).url()
     : artwork.fileUrl;
 
   if (!src) return null;
@@ -63,7 +67,7 @@ export function Media({
       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
       priority={priority}
       // Sample data URIs aren't on the Sanity CDN, so skip optimization for them.
-      unoptimized={!isRemote}
+      unoptimized={!isRemote || fullResolution}
     />
   );
 }

@@ -9,8 +9,8 @@ import type {
 } from "@/sanity/queries";
 import { ScrapbookImage } from "./ScrapbookImage";
 
-function imageUrl(image: unknown, width = 2200) {
-  return urlForImage(image as object).width(width).quality(92).url();
+function imageUrl(image: unknown) {
+  return urlForImage(image as object).quality(95).url();
 }
 
 function ProjectImage({
