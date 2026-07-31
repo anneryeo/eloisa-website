@@ -11,26 +11,24 @@ export function SiteFooter({
   const socialHandle = (handle || "eloisaclairedesign").replace(/^@/, "");
 
   return (
-    <footer className="space-y-2 text-[0.6875rem] font-light leading-relaxed text-ink">
-      <div className="flex flex-col items-start">
-        <a
-          href={`https://www.instagram.com/${socialHandle}/`}
-          target="_blank"
-          rel="noreferrer"
-          className="transition-colors duration-200 hover:text-accent"
-        >
-          Instagram @{socialHandle}
-        </a>
-        <a
-          href={`https://www.tiktok.com/@${socialHandle}`}
-          target="_blank"
-          rel="noreferrer"
-          className="transition-colors duration-200 hover:text-accent"
-        >
-          TikTok @{socialHandle}
-        </a>
-      </div>
-      {website && <p>{website}</p>}
+    <footer className="flex flex-col items-start gap-1 text-[0.6875rem] font-light leading-4 text-ink">
+      <a
+        href={`https://www.instagram.com/${socialHandle}/`}
+        target="_blank"
+        rel="noreferrer"
+        className="transition-colors duration-200 hover:text-accent"
+      >
+        Instagram @{socialHandle}
+      </a>
+      <a
+        href={`https://www.tiktok.com/@${socialHandle}`}
+        target="_blank"
+        rel="noreferrer"
+        className="transition-colors duration-200 hover:text-accent"
+      >
+        TikTok @{socialHandle}
+      </a>
+      {website && <p className="m-0">{website}</p>}
       <a
         href={`mailto:${email}`}
         className="transition-colors duration-200 hover:text-accent"
