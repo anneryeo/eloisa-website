@@ -48,11 +48,8 @@ export function SiteNav() {
 /**
  * A section that reveals sub-links. Work uses this: the brief calls for it to
  * sit black and collapsed like every other item on first paint, then turn pink
- * and expand into Personal / Professional on hover, click, or keyboard focus.
- *
- * It's a button rather than a link because its job is to *pick* between the two
- * children, not to navigate — which also gives keyboard and touch users a real
- * control instead of a hover-only affordance.
+ * and expand into Personal / Professional on hover or keyboard focus. The Work
+ * label itself links to the main gallery.
  */
 function NavDisclosure({
   section,
@@ -83,14 +80,14 @@ function NavDisclosure({
         if (!event.currentTarget.contains(event.relatedTarget)) setOpen(false);
       }}
     >
-      <button
-        type="button"
+      <Link
+        href={section.href}
         aria-expanded={expanded}
-        onClick={() => setOpen((value) => !value)}
+        aria-current={pathname === section.href ? "page" : undefined}
         className={cx(ITEM, expanded ? "text-accent" : "text-ink")}
       >
         {section.label}
-      </button>
+      </Link>
 
       {/* 0fr -> 1fr animates height without hard-coding one. */}
       <div
