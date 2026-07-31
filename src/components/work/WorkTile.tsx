@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
+import Link from "next/link";
 
 import { Media } from "@/components/Media";
 import type { Artwork } from "@/sanity/queries";
@@ -38,19 +39,16 @@ export const SCRAPBOOK_SPRING = {
 export function WorkTile({
   piece,
   priority = false,
-  onOpen,
 }: {
   piece: Artwork;
   priority?: boolean;
-  onOpen: () => void;
 }) {
   const reducedMotion = useReducedMotion();
 
   return (
     <figure className="mb-5 break-inside-avoid">
-      <motion.button
-        type="button"
-        onClick={onOpen}
+      <Link href={`/work/${piece.workType ?? "professional"}/${piece.slug}`}>
+      <motion.div
         whileHover={
           reducedMotion
             ? undefined
@@ -63,7 +61,8 @@ export function WorkTile({
       >
         <Media artwork={piece} priority={priority} />
         <span className="sr-only">View {piece.title} at full size</span>
-      </motion.button>
+      </motion.div>
+      </Link>
     </figure>
   );
 }
