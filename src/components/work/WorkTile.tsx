@@ -57,9 +57,14 @@ export function WorkTile({
         whileTap={reducedMotion ? undefined : { scale: 0.98 }}
         transition={SCRAPBOOK_SPRING}
         style={{ aspectRatio: piece.aspectRatio ?? DEFAULT_RATIO }}
-        className="relative block w-full overflow-hidden bg-placeholder outline-offset-4 transition-shadow duration-300 ease-gallery hover:shadow-[0_14px_30px_-12px_rgba(30,30,30,0.35)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+        className="group relative block w-full overflow-hidden bg-placeholder outline-offset-4 transition-shadow duration-300 ease-gallery hover:shadow-[0_14px_30px_-12px_rgba(30,30,30,0.35)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
       >
         <Media artwork={piece} priority={priority} />
+        <span className="absolute inset-0 flex items-center justify-center bg-white/85 px-5 text-center opacity-0 transition-opacity duration-300 ease-gallery group-hover:opacity-100 group-focus-visible:opacity-100">
+          <span className="text-sm font-medium uppercase tracking-[0.06em] text-ink">
+            {piece.title}
+          </span>
+        </span>
         <span className="sr-only">View {piece.title} at full size</span>
       </motion.div>
       </Link>

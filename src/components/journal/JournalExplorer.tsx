@@ -168,7 +168,7 @@ function JournalTile({
         whileTap={reducedMotion ? undefined : { scale: 0.98 }}
         transition={SCRAPBOOK_SPRING}
         style={{ aspectRatio: entry.coverAspectRatio ?? 0.8 }}
-        className="relative block w-full outline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+        className="group relative block w-full overflow-hidden outline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
       >
         {src && (
           <motion.div
@@ -186,6 +186,11 @@ function JournalTile({
             />
           </motion.div>
         )}
+        <span className="absolute inset-0 z-10 flex items-center justify-center bg-white/85 px-5 text-center opacity-0 transition-opacity duration-300 ease-gallery group-hover:opacity-100 group-focus-visible:opacity-100">
+          <span className="font-mono text-sm font-bold uppercase tracking-[0.04em] text-ink">
+            {entry.title}, {entry.year}
+          </span>
+        </span>
         <span className="sr-only">
           Open {entry.title}, {entry.year}
         </span>
