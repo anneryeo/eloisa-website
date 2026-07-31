@@ -119,6 +119,93 @@ export const artwork = defineType({
       rows: 4,
     }),
     defineField({
+      name: "projectLabel",
+      title: "Project label",
+      description: 'Small label above the intro. Defaults to "WORK".',
+      type: "string",
+      initialValue: "WORK",
+    }),
+    defineField({
+      name: "heroImage",
+      title: "Case study hero",
+      description:
+        "Optional wide hero for the project page. The main artwork image is used when empty.",
+      type: "image",
+      options: { hotspot: true },
+    }),
+    defineField({
+      name: "caseStudySections",
+      title: "Case study sections",
+      description:
+        "Build the page in order. Empty projects still show the standard title, intro, and hero layout.",
+      type: "array",
+      of: [
+        {
+          type: "object",
+          name: "caseStudySection",
+          title: "Case study section",
+          fields: [
+            defineField({
+              name: "layout",
+              title: "Layout",
+              type: "string",
+              options: {
+                list: [
+                  { title: "Full-width image", value: "full" },
+                  { title: "Three photos", value: "threeUp" },
+                  { title: "Two photos", value: "split" },
+                  { title: "Text", value: "text" },
+                ],
+                layout: "radio",
+              },
+              initialValue: "full",
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: "heading",
+              title: "Heading",
+              type: "string",
+            }),
+            defineField({
+              name: "body",
+              title: "Body",
+              type: "text",
+              rows: 5,
+            }),
+            defineField({
+              name: "images",
+              title: "Images",
+              description:
+                "Add one image for full-width, two for split, or three for the three-photo layout.",
+              type: "array",
+              of: [{ type: "image", options: { hotspot: true } }],
+              validation: (rule) => rule.max(3),
+            }),
+          ],
+          preview: {
+            select: {
+              title: "heading",
+              layout: "layout",
+              media: "images.0",
+            },
+            prepare({ title, layout, media }) {
+              const labels: Record<string, string> = {
+                full: "Full-width image",
+                threeUp: "Three photos",
+                split: "Two photos",
+                text: "Text",
+              };
+              return {
+                title: title || labels[layout] || "Case study section",
+                subtitle: labels[layout],
+                media,
+              };
+            },
+          },
+        },
+      ],
+    }),
+    defineField({
       name: "featured",
       title: "Featured on front gallery",
       type: "boolean",

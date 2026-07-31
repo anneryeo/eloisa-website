@@ -21,6 +21,26 @@ export interface Artwork {
   medium?: string;
   dimensions?: string;
   description?: string;
+  projectLabel?: string;
+  heroImage?: unknown;
+  heroAspectRatio?: number;
+  caseStudySections?: CaseStudySection[];
+}
+
+export type CaseStudyLayout = "full" | "threeUp" | "split" | "text";
+
+export interface CaseStudyImage {
+  _key: string;
+  image: unknown;
+  aspectRatio?: number;
+}
+
+export interface CaseStudySection {
+  _key: string;
+  layout: CaseStudyLayout;
+  heading?: string;
+  body?: string;
+  images?: CaseStudyImage[];
 }
 
 const FIELDS = `
@@ -42,6 +62,28 @@ const FIELDS = `
   medium,
   dimensions,
   description
+`;
+
+const CASE_STUDY_FIELDS = `
+  ${FIELDS},
+  "projectLabel": coalesce(projectLabel, "WORK"),
+  "heroImage": coalesce(heroImage, image, poster),
+  "heroAspectRatio": coalesce(
+    heroImage.asset->metadata.dimensions.aspectRatio,
+    image.asset->metadata.dimensions.aspectRatio,
+    poster.asset->metadata.dimensions.aspectRatio
+  ),
+  "caseStudySections": caseStudySections[]{
+    _key,
+    layout,
+    heading,
+    body,
+    "images": images[]{
+      _key,
+      "image": @,
+      "aspectRatio": asset->metadata.dimensions.aspectRatio
+    }
+  }
 `;
 
 /**
@@ -75,6 +117,39 @@ export function getFeaturedWork(): Promise<Artwork[]> {
 /** Every piece in one Work sub-list (Personal or Professional). */
 export function getWorkByType(workType: WorkType): Promise<Artwork[]> {
   return fetchWork(" && workType == $workType", { workType });
+}
+
+/** One project plus its neighbours within the same Work section. */
+export async function getWorkProject(
+  workType: WorkType,
+  slug: string,
+): Promise<{
+  project: Artwork;
+  previous?: Pick<Artwork, "title" | "slug">;
+  next?: Pick<Artwork, "title" | "slug">;
+} | null> {
+  if (!isSanityConfigured) return null;
+
+  try {
+    const projects = await client.fetch<Artwork[]>(
+      `*[_type == "artwork" && workType == $workType] | order(order asc){${CASE_STUDY_FIELDS}}`,
+      { workType },
+    );
+    const index = projects.findIndex((project) => project.slug === slug);
+    if (index === -1) return null;
+
+    const project = projects[index];
+    const previous = projects[(index - 1 + projects.length) % projects.length];
+    const next = projects[(index + 1) % projects.length];
+
+    return {
+      project,
+      previous: projects.length > 1 ? previous : undefined,
+      next: projects.length > 1 ? next : undefined,
+    };
+  } catch {
+    return null;
+  }
 }
 
 export interface JournalEntry {
