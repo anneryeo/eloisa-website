@@ -61,7 +61,7 @@ export function WorkTile({
       >
         <Media artwork={piece} priority={priority} />
         <span className="absolute inset-0 flex items-center justify-center bg-white/85 px-5 text-center opacity-0 transition-opacity duration-300 ease-gallery group-hover:opacity-100 group-focus-visible:opacity-100">
-          <span className="text-sm font-medium uppercase tracking-[0.06em] text-ink">
+          <span className="font-mono text-sm font-bold uppercase tracking-[0.04em] text-ink">
             {piece.title}
           </span>
         </span>
