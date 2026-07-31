@@ -1,30 +1,34 @@
 import type { Metadata } from "next";
-import { Architects_Daughter, Poppins, Space_Mono } from "next/font/google";
+import localFont from "next/font/local";
 
 import "./globals.css";
 
 // The comps set the wordmark in "Scribbled", which isn't licensed for web
 // embedding. Architects Daughter is the closest free stand-in: upright,
 // monoline, handwritten caps. Swap this import if the real face is licensed.
-const display = Architects_Daughter({
-  subsets: ["latin"],
-  weight: "400",
+const display = localFont({
+  src: "./fonts/architects-daughter-400.ttf",
   variable: "--font-display",
   display: "swap",
 });
 
 // Journal captions and the About greeting are set in a typewriter mono in the
 // comps; Space Mono is the closest free face.
-const mono = Space_Mono({
-  subsets: ["latin"],
-  weight: ["400", "700"],
+const mono = localFont({
+  src: [
+    { path: "./fonts/space-mono-400.ttf", weight: "400", style: "normal" },
+    { path: "./fonts/space-mono-700.ttf", weight: "700", style: "normal" },
+  ],
   variable: "--font-mono",
   display: "swap",
 });
 
-const sans = Poppins({
-  subsets: ["latin"],
-  weight: ["300", "400", "500"],
+const sans = localFont({
+  src: [
+    { path: "./fonts/poppins-300.ttf", weight: "300", style: "normal" },
+    { path: "./fonts/poppins-400.ttf", weight: "400", style: "normal" },
+    { path: "./fonts/poppins-500.ttf", weight: "500", style: "normal" },
+  ],
   variable: "--font-sans",
   display: "swap",
 });
