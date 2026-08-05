@@ -1,5 +1,5 @@
 import { WorkGrid } from "@/components/work/WorkGrid";
-import { getFeaturedWork } from "@/sanity/queries";
+import { getAllWork } from "@/sanity/queries";
 
 // Revalidate hourly; Sanity's CDN keeps reads fast between rebuilds.
 export const revalidate = 3600;
@@ -9,7 +9,7 @@ export const revalidate = 3600;
  * footer, so this renders only the grid of pieces.
  */
 export default async function WorkPage() {
-  const pieces = await getFeaturedWork();
+  const pieces = await getAllWork();
 
   return <WorkGrid pieces={pieces} />;
 }

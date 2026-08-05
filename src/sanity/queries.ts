@@ -113,9 +113,9 @@ async function fetchWork(
   }
 }
 
-/** Featured pieces, for the Work landing page. */
-export function getFeaturedWork(): Promise<Artwork[]> {
-  return fetchWork(" && featured == true");
+/** Every Personal and Professional piece, for the Work landing page. */
+export function getAllWork(): Promise<Artwork[]> {
+  return fetchWork("");
 }
 
 /** Every piece in one Work sub-list (Personal or Professional). */
