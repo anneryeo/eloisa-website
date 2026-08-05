@@ -26,7 +26,8 @@ export const NAV_SECTIONS: NavSection[] = [
     ],
   },
   { label: "About Me", href: "/about" },
-  { label: "Journal", href: "/journal" },
-  { label: "FAQ", href: "/faq" },
+  // Temporarily hidden; uncomment to restore these sections to the site nav.
+  // { label: "Journal", href: "/journal" },
+  // { label: "FAQ", href: "/faq" },
   { label: "Contact", href: "/contact" },
 ];
