@@ -45,6 +45,65 @@ export function SiteNav({ sections = NAV_SECTIONS }: { sections?: NavSection[] }
   );
 }
 
+export function MobileSiteNav({
+  sections = NAV_SECTIONS,
+}: {
+  sections?: NavSection[];
+}) {
+  const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+
+  return (
+    <div className="relative z-50 lg:hidden">
+      <button
+        type="button"
+        aria-label={open ? "Close navigation menu" : "Open navigation menu"}
+        aria-expanded={open}
+        onClick={() => setOpen((value) => !value)}
+        className="flex h-10 w-10 flex-col items-center justify-center gap-1.5 border border-ink bg-canvas"
+      >
+        <span
+          className={cx(
+            "block h-px w-5 bg-current transition-transform",
+            open ? "translate-y-[3.5px] rotate-45" : "",
+          )}
+        />
+        <span
+          className={cx(
+            "block h-px w-5 bg-current transition-transform",
+            open ? "-translate-y-[3.5px] -rotate-45" : "",
+          )}
+        />
+      </button>
+
+      {open && (
+        <nav
+          aria-label="Mobile sections"
+          className="absolute right-0 top-12 min-w-52 border border-ink bg-canvas p-5 shadow-[0_12px_30px_-14px_rgba(30,30,30,0.35)]"
+        >
+          <ul className="space-y-3 text-right text-sm font-light uppercase tracking-[0.05em]">
+            {sections.map((section) => (
+              <li key={section.href}>
+                <Link
+                  href={section.href}
+                  onClick={() => setOpen(false)}
+                  aria-current={pathname === section.href ? "page" : undefined}
+                  className={cx(
+                    "block transition-colors hover:text-accent",
+                    pathname === section.href ? "text-accent" : "text-ink",
+                  )}
+                >
+                  {section.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )}
+    </div>
+  );
+}
+
 /**
  * A section that reveals sub-links. Work uses this: the brief calls for it to
  * sit black and collapsed like every other item on first paint, then turn pink

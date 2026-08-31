@@ -85,8 +85,8 @@ export function SiteFooter({
       ];
 
   return (
-    <footer className="flex flex-col items-start gap-1 text-[0.6875rem] font-light leading-4 text-ink">
-      <div className="mb-2 flex flex-wrap items-center gap-2">
+    <footer className="flex flex-col items-start justify-between gap-4 text-[0.6875rem] font-light leading-4 text-ink sm:flex-row sm:items-center">
+      <div className="flex flex-wrap items-center gap-2">
         {links.map((link) => {
           const label = link.label || PLATFORM_LABELS[link.platform];
           return (
@@ -104,22 +104,24 @@ export function SiteFooter({
           );
         })}
       </div>
-      {websiteHref && (
+      <div className="flex flex-col items-start gap-1 sm:items-end">
+        {websiteHref && (
+          <a
+            href={websiteHref}
+            target="_blank"
+            rel="noreferrer"
+            className="transition-colors duration-200 hover:text-accent"
+          >
+            {website}
+          </a>
+        )}
         <a
-          href={websiteHref}
-          target="_blank"
-          rel="noreferrer"
+          href={`mailto:${email}`}
           className="transition-colors duration-200 hover:text-accent"
         >
-          {website}
+          {email}
         </a>
-      )}
-      <a
-        href={`mailto:${email}`}
-        className="transition-colors duration-200 hover:text-accent"
-      >
-        {email}
-      </a>
+      </div>
     </footer>
   );
 }

@@ -1,8 +1,7 @@
 import { urlForImage } from "@/sanity/image";
-import { getSiteSettings } from "@/sanity/queries";
+import type { SiteSettings } from "@/sanity/queries";
 import { RichText } from "@/components/RichText";
-import { SiteFooter } from "./SiteFooter";
-import { SiteNav } from "./SiteNav";
+import { MobileSiteNav, SiteNav } from "./SiteNav";
 import { SiteWordmark, type WordmarkFrame } from "./SiteWordmark";
 import { NAV_LABELS, NAV_SECTIONS, type NavSection } from "./navigation";
 
@@ -16,9 +15,7 @@ const FALLBACK_BIO =
  * of chrome here (wordmark frames, bio, footer lines) is edited in the
  * Studio's Site settings document.
  */
-export async function SiteSidebar() {
-  const settings = await getSiteSettings();
-
+export function SiteSidebar({ settings }: { settings: SiteSettings | null }) {
   const frames: WordmarkFrame[] =
     settings?.wordmarkFrames
       ?.filter((frame) => frame.image)
@@ -36,27 +33,24 @@ export async function SiteSidebar() {
     : NAV_SECTIONS;
 
   return (
-    <aside className="flex flex-col gap-9 lg:sticky lg:top-0 lg:h-screen lg:py-14">
-      <SiteWordmark
-        frames={frames}
-        interval={settings?.wordmarkInterval}
-        width={settings?.wordmarkWidth}
-      />
+    <aside className="relative flex flex-col gap-7 lg:sticky lg:top-0 lg:h-screen lg:gap-9 lg:py-14">
+      <div className="flex items-start justify-between gap-6">
+        <SiteWordmark
+          frames={frames}
+          interval={settings?.wordmarkInterval}
+          width={settings?.wordmarkWidth}
+          mobileWidth={settings?.wordmarkMobileWidth}
+        />
+        <MobileSiteNav sections={sections} />
+      </div>
 
       <RichText
         value={settings?.bioRich ?? settings?.bio ?? FALLBACK_BIO}
         className="max-w-[34ch] text-[0.6875rem] font-light leading-[1.85] text-ink"
       />
 
-      <SiteNav sections={sections} />
-
-      <div className="mt-auto pt-10">
-        <SiteFooter
-          handle={settings?.footerHandle}
-          website={settings?.footerWebsite}
-          email={settings?.footerEmail}
-          socialLinks={settings?.socialLinks}
-        />
+      <div className="hidden lg:block">
+        <SiteNav sections={sections} />
       </div>
     </aside>
   );

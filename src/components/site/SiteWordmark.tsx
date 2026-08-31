@@ -23,10 +23,12 @@ export function SiteWordmark({
   frames = [],
   interval = 1.6,
   width = 190,
+  mobileWidth = 150,
 }: {
   frames?: WordmarkFrame[];
   interval?: number;
   width?: number;
+  mobileWidth?: number;
 }) {
   const [index, setIndex] = useState(0);
 
@@ -60,11 +62,14 @@ export function SiteWordmark({
     <Link
       href="/"
       aria-label="Eloisa Claire Design — home"
-      className="relative block max-w-full"
-      style={{
-        width: `${Math.min(260, Math.max(120, width))}px`,
-        aspectRatio: "190 / 124",
-      }}
+      className="site-wordmark relative block max-w-full"
+      style={
+        {
+          "--wordmark-width": `${Math.min(300, Math.max(100, width))}px`,
+          "--wordmark-mobile-width": `${Math.min(220, Math.max(80, mobileWidth))}px`,
+          aspectRatio: "190 / 124",
+        } as React.CSSProperties
+      }
     >
       {frames.map((frame, frameIndex) => (
         <Image
@@ -72,7 +77,7 @@ export function SiteWordmark({
           src={frame.url}
           alt=""
           fill
-          sizes={`${Math.min(260, Math.max(120, width))}px`}
+          sizes={`(max-width: 1023px) ${Math.min(220, Math.max(80, mobileWidth))}px, ${Math.min(300, Math.max(100, width))}px`}
           priority={frameIndex === 0}
           className={cx(
             "object-contain object-left",

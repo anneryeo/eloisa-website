@@ -1,4 +1,5 @@
 import { CursorSparkles } from "@/components/site/CursorSparkles";
+import { SiteFooter } from "@/components/site/SiteFooter";
 import { SiteSidebar } from "@/components/site/SiteSidebar";
 import { urlForImage } from "@/sanity/image";
 import { getSiteSettings } from "@/sanity/queries";
@@ -27,16 +28,28 @@ export default async function SiteLayout({
 
   return (
     <div
-      className="cursor-funky mx-auto grid max-w-[1600px] grid-cols-1 gap-10 px-7 py-10 lg:grid-cols-[minmax(200px,260px)_1fr] lg:gap-20 lg:px-12 lg:py-0"
+      className="cursor-funky min-h-screen px-7 py-10 lg:px-12 lg:py-0"
       style={
         customCursor
-          ? ({ "--site-cursor": `url(${customCursor}) 3 2, auto` } as React.CSSProperties)
+          ? ({
+              "--site-cursor": `url(${customCursor}) 3 2, auto`,
+            } as React.CSSProperties)
           : undefined
       }
     >
       <CursorSparkles />
-      <SiteSidebar />
-      <main className="min-w-0 lg:py-14">{children}</main>
+      <div className="mx-auto grid max-w-[1600px] grid-cols-1 gap-10 lg:grid-cols-[minmax(220px,300px)_1fr] lg:gap-20">
+        <SiteSidebar settings={settings} />
+        <main className="min-w-0 lg:py-14">{children}</main>
+      </div>
+      <div className="mx-auto mt-16 max-w-[1600px] border-t border-ink/20 py-8 lg:mt-0">
+        <SiteFooter
+          handle={settings?.footerHandle}
+          website={settings?.footerWebsite}
+          email={settings?.footerEmail}
+          socialLinks={settings?.socialLinks}
+        />
+      </div>
     </div>
   );
 }

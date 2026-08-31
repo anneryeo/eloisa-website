@@ -245,6 +245,7 @@ export interface SiteSettings {
   wordmarkFrames?: { _key: string; image: unknown; aspectRatio?: number }[];
   wordmarkInterval?: number;
   wordmarkWidth?: number;
+  wordmarkMobileWidth?: number;
   favicon?: unknown;
   cursorImage?: unknown;
   bio?: string;
@@ -295,6 +296,7 @@ export async function getSiteSettings(): Promise<SiteSettings | null> {
         },
         wordmarkInterval,
         wordmarkWidth,
+        wordmarkMobileWidth,
         favicon,
         cursorImage,
         bio,

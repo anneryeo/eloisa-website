@@ -29,12 +29,20 @@ export const siteSettings = defineType({
     }),
     defineField({
       name: "wordmarkWidth",
-      title: "Logo width",
+      title: "Desktop logo width",
       description:
-        "Width of the image logo in pixels. The layout caps it so it remains responsive.",
+        "Width of the image logo in pixels on desktop. The layout caps it so it remains responsive.",
       type: "number",
       initialValue: 190,
-      validation: (rule) => rule.min(120).max(260),
+      validation: (rule) => rule.min(100).max(300),
+    }),
+    defineField({
+      name: "wordmarkMobileWidth",
+      title: "Mobile logo width",
+      description: "Width of the image logo in pixels on phones and tablets.",
+      type: "number",
+      initialValue: 150,
+      validation: (rule) => rule.min(80).max(220),
     }),
     defineField({
       name: "favicon",
