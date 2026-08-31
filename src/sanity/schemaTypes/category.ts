@@ -25,6 +25,7 @@ export const category = defineType({
       type: "text",
       rows: 3,
       readOnly: true,
+      hidden: true,
     }),
     defineField({
       name: "descriptionRich",

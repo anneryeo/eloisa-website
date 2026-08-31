@@ -237,6 +237,7 @@ export const artwork = defineType({
               type: "text",
               rows: 5,
               readOnly: true,
+              hidden: true,
             }),
             defineField({
               name: "bodyRich",

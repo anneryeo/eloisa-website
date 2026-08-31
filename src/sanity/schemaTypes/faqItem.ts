@@ -18,6 +18,7 @@ export const faqItem = defineType({
       type: "text",
       rows: 6,
       readOnly: true,
+      hidden: true,
     }),
     defineField({
       name: "answerRich",

@@ -60,6 +60,7 @@ export const journalEntry = defineType({
       type: "text",
       rows: 2,
       readOnly: true,
+      hidden: true,
     }),
     defineField({
       name: "blurbRich",
@@ -75,6 +76,7 @@ export const journalEntry = defineType({
       type: "text",
       rows: 3,
       readOnly: true,
+      hidden: true,
     }),
     defineField({
       name: "noteRich",

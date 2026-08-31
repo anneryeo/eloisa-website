@@ -71,6 +71,7 @@ export const siteSettings = defineType({
       type: "text",
       rows: 4,
       readOnly: true,
+      hidden: true,
     }),
     defineField({
       name: "bioRich",
@@ -208,6 +209,7 @@ export const siteSettings = defineType({
       type: "array",
       of: [{ type: "string" }],
       readOnly: true,
+      hidden: true,
     }),
     defineField({
       name: "journalIntroRich",
