@@ -234,7 +234,10 @@ export async function getFaqItems(): Promise<FaqItem[]> {
 
 export interface AboutPage {
   heading: string;
+  portraitMediaType?: "image" | "gif" | "video";
   portrait?: unknown;
+  portraitFileUrl?: string;
+  portraitHoverImage?: unknown;
   portraitAspectRatio?: number;
   /** Portable Text blocks — the comp italicizes handle names inside the bio. */
   bio?: unknown[];
@@ -323,7 +326,13 @@ export async function getAboutPage(): Promise<AboutPage | null> {
     return await client.fetch<AboutPage | null>(
       `*[_type == "aboutPage"][0]{
         heading,
+        portraitMediaType,
         portrait,
+        "portraitFileUrl": select(
+          portraitMediaType == "gif" => portraitGif.asset->url,
+          portraitMediaType == "video" => portraitVideo.asset->url
+        ),
+        portraitHoverImage,
         "portraitAspectRatio": portrait.asset->metadata.dimensions.aspectRatio,
         bio
       }`,
