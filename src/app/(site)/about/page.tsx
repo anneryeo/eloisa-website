@@ -1,6 +1,5 @@
-import Image from "next/image";
-
 import { RichText } from "@/components/RichText";
+import { AboutPortrait } from "@/components/about/AboutPortrait";
 import { urlForImage } from "@/sanity/image";
 import { getAboutPage } from "@/sanity/queries";
 
@@ -36,32 +35,20 @@ export default async function AboutMePage() {
   const about = await getAboutPage();
   const portraitUrl = about?.portrait
     ? urlForImage(about.portrait).width(1200).url()
-    : null;
+    : undefined;
+  const hoverPortraitUrl = about?.portraitHoverImage
+    ? urlForImage(about.portraitHoverImage).width(1200).url()
+    : undefined;
 
   return (
     <div className="grid gap-10 md:grid-cols-[minmax(0,340px)_minmax(0,1fr)] md:gap-16">
-      {portraitUrl ? (
-        <figure
-          className="relative w-full max-w-[340px] overflow-hidden bg-placeholder transition-transform duration-300 ease-gallery hover:-rotate-1 hover:scale-[1.02]"
-          style={{ aspectRatio: about?.portraitAspectRatio ?? 0.82 }}
-        >
-          <Image
-            src={portraitUrl}
-            alt="Portrait of Eloisa Claire"
-            fill
-            sizes="(max-width: 768px) 100vw, 340px"
-            className="object-cover"
-            priority
-          />
-        </figure>
-      ) : (
-        // Gray stand-in keeps the comp's layout before a portrait is uploaded.
-        <div
-          aria-hidden="true"
-          className="w-full max-w-[340px] bg-placeholder"
-          style={{ aspectRatio: 0.82 }}
-        />
-      )}
+      <AboutPortrait
+        mediaType={about?.portraitMediaType}
+        imageUrl={portraitUrl}
+        fileUrl={about?.portraitFileUrl}
+        hoverImageUrl={hoverPortraitUrl}
+        ratio={about?.portraitAspectRatio ?? 0.82}
+      />
 
       <section className="w-full">
         <h1 className="mb-6 font-mono text-[1.0625rem] font-bold uppercase tracking-[0.08em] text-accent">
