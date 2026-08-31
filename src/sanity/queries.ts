@@ -246,6 +246,7 @@ export interface SiteSettings {
   wordmarkInterval?: number;
   wordmarkWidth?: number;
   favicon?: unknown;
+  cursorImage?: unknown;
   bio?: string;
   bioRich?: unknown[];
   footerHandle?: string;
@@ -295,6 +296,7 @@ export async function getSiteSettings(): Promise<SiteSettings | null> {
         wordmarkInterval,
         wordmarkWidth,
         favicon,
+        cursorImage,
         bio,
         bioRich,
         footerHandle,

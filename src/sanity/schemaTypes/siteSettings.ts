@@ -49,6 +49,14 @@ export const siteSettings = defineType({
         }),
     }),
     defineField({
+      name: "cursorImage",
+      title: "Custom cursor",
+      description:
+        "Upload a transparent square PNG or WebP. The site scales it to a browser-safe 48 × 48 px; leave empty to use the pink default cursor.",
+      type: "image",
+      options: { accept: "image/png,image/webp" },
+    }),
+    defineField({
       name: "bio",
       title: "Sidebar bio (existing plain text)",
       description: "The standing intro paragraph under the wordmark.",

@@ -18,10 +18,12 @@ body {
   .cursor-funky,
   .cursor-funky a,
   .cursor-funky button {
-    cursor:
+    cursor: var(
+      --site-cursor,
       url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='32' viewBox='0 0 28 32'%3E%3Cpath d='M3 2l18 17-9 1-4 8z' fill='%23f849c1' stroke='%23fff' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E")
         3 2,
-      auto;
+      auto
+    );
   }
 }
 
