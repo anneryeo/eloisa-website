@@ -7,7 +7,7 @@ export default function ContactPage() {
   return (
     <>
       <SectionHeading>Contact</SectionHeading>
-      <p className="max-w-[60ch] text-sm font-light leading-[1.9] text-muted">
+      <p className="w-full text-justify text-sm font-light leading-[1.9] text-muted">
         This section is still being built. In the meantime, reach Eloisa at{" "}
         <a
           href="mailto:hello@eloisaclaire.com"

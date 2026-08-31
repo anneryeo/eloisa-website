@@ -1,8 +1,8 @@
 import { defineField, defineType } from "sanity";
 
 /**
- * A single art piece. Media is modeled as one of three kinds — a still image,
- * a video, or a GIF — because each needs different delivery:
+ * A single art piece. Media is modeled as one of four kinds — a still image,
+ * a video, a social embed, or a GIF — because each needs different delivery:
  *   - image : Sanity's image pipeline (hotspot crop, on-the-fly transforms)
  *   - video : uploaded as a file asset, streamed with a poster still
  *   - gif   : uploaded as a file asset so animation is preserved (the image
@@ -34,6 +34,7 @@ export const artwork = defineType({
         list: [
           { title: "Image", value: "image" },
           { title: "Video", value: "video" },
+          { title: "Social video link", value: "socialVideo" },
           { title: "GIF", value: "gif" },
         ],
         layout: "radio",
@@ -63,7 +64,35 @@ export const artwork = defineType({
       description: "Shown before the video plays and as a fallback.",
       type: "image",
       options: { hotspot: true },
-      hidden: ({ parent }) => parent?.mediaType !== "video",
+      hidden: ({ parent }) =>
+        parent?.mediaType !== "video" && parent?.mediaType !== "socialVideo",
+    }),
+    defineField({
+      name: "socialVideoUrl",
+      title: "Social video URL",
+      description:
+        "Paste a YouTube video/Short, Instagram post/Reel, or TikTok video URL.",
+      type: "url",
+      hidden: ({ parent }) => parent?.mediaType !== "socialVideo",
+      validation: (rule) =>
+        rule.uri({ scheme: ["http", "https"] }).custom((value, context) => {
+          if (
+            (context.parent as { mediaType?: string })?.mediaType !==
+            "socialVideo"
+          )
+            return true;
+          if (!value) return "A social video URL is required.";
+          try {
+            const host = new URL(value).hostname.replace(/^www\./, "");
+            return ["youtube.com", "youtu.be", "instagram.com", "tiktok.com"].some(
+              (domain) => host === domain || host.endsWith(`.${domain}`),
+            )
+              ? true
+              : "Use a YouTube, Instagram, or TikTok URL.";
+          } catch {
+            return "Enter a valid URL.";
+          }
+        }),
     }),
     defineField({
       name: "gif",

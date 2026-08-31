@@ -22,9 +22,11 @@ export interface WordmarkFrame {
 export function SiteWordmark({
   frames = [],
   interval = 1.6,
+  width = 190,
 }: {
   frames?: WordmarkFrame[];
   interval?: number;
+  width?: number;
 }) {
   const [index, setIndex] = useState(0);
 
@@ -58,7 +60,11 @@ export function SiteWordmark({
     <Link
       href="/"
       aria-label="Eloisa Claire Design — home"
-      className="relative block h-[124px] w-[190px]"
+      className="relative block max-w-full"
+      style={{
+        width: `${Math.min(260, Math.max(120, width))}px`,
+        aspectRatio: "190 / 124",
+      }}
     >
       {frames.map((frame, frameIndex) => (
         <Image
@@ -66,7 +72,7 @@ export function SiteWordmark({
           src={frame.url}
           alt=""
           fill
-          sizes="190px"
+          sizes={`${Math.min(260, Math.max(120, width))}px`}
           priority={frameIndex === 0}
           className={cx(
             "object-contain object-left",

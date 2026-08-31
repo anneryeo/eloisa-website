@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 
+import { urlForImage } from "@/sanity/image";
+import { getSiteSettings } from "@/sanity/queries";
+
 import "./globals.css";
 
 // The comps set the wordmark in "Scribbled", which isn't licensed for web
@@ -33,14 +36,26 @@ const sans = localFont({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: {
-    default: "Eloisa Claire Design",
-    template: "%s — Eloisa Claire Design",
-  },
-  description:
-    "Eloisa Claire is a marketing-led graphic designer and creative storyteller focused on colorful visual direction and campaign-driven design based in Manila, Philippines.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSiteSettings();
+  const favicon = settings?.favicon
+    ? urlForImage(settings.favicon as object)
+        .width(512)
+        .height(512)
+        .fit("crop")
+        .url()
+    : undefined;
+
+  return {
+    title: {
+      default: "Eloisa Claire Design",
+      template: "%s — Eloisa Claire Design",
+    },
+    description:
+      "Eloisa Claire is a marketing-led graphic designer and creative storyteller focused on colorful visual direction and campaign-driven design based in Manila, Philippines.",
+    icons: favicon ? { icon: favicon, apple: favicon } : undefined,
+  };
+}
 
 export default function RootLayout({
   children,

@@ -3,6 +3,7 @@ import { getSiteSettings } from "@/sanity/queries";
 import { SiteFooter } from "./SiteFooter";
 import { SiteNav } from "./SiteNav";
 import { SiteWordmark, type WordmarkFrame } from "./SiteWordmark";
+import { NAV_LABELS, NAV_SECTIONS, type NavSection } from "./navigation";
 
 /** Comp copy, used whenever the CMS settings document is missing. */
 const FALLBACK_BIO =
@@ -24,22 +25,35 @@ export async function SiteSidebar() {
         key: frame._key,
         url: urlForImage(frame.image as object).width(400).url(),
       })) ?? [];
+  const sections: NavSection[] = settings?.siteSections?.length
+    ? settings.siteSections
+        .filter((section) => section.visible !== false)
+        .map((section) => ({
+          href: section.path,
+          label: section.label?.trim() || NAV_LABELS[section.path] || "Section",
+        }))
+    : NAV_SECTIONS;
 
   return (
     <aside className="flex flex-col gap-9 lg:sticky lg:top-0 lg:h-screen lg:py-14">
-      <SiteWordmark frames={frames} interval={settings?.wordmarkInterval} />
+      <SiteWordmark
+        frames={frames}
+        interval={settings?.wordmarkInterval}
+        width={settings?.wordmarkWidth}
+      />
 
       <p className="max-w-[34ch] text-[0.6875rem] font-light leading-[1.85] text-ink">
         {settings?.bio ?? FALLBACK_BIO}
       </p>
 
-      <SiteNav />
+      <SiteNav sections={sections} />
 
       <div className="mt-auto pt-10">
         <SiteFooter
           handle={settings?.footerHandle}
           website={settings?.footerWebsite}
           email={settings?.footerEmail}
+          socialLinks={settings?.socialLinks}
         />
       </div>
     </aside>

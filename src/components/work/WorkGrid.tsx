@@ -1,8 +1,8 @@
 import type { Artwork } from "@/sanity/queries";
 import { WorkTile } from "./WorkTile";
 
-/** Multi-column masonry; tiles keep their own aspect ratios and flow down. */
-const COLUMNS = "columns-1 gap-5 sm:columns-2 lg:columns-3";
+/** Narrow layouts use CSS columns; desktop columns are assigned explicitly. */
+const NARROW_COLUMNS = "columns-1 gap-5 sm:columns-2 lg:hidden";
 
 /**
  * Aspect ratios (width ÷ height) traced from the staggered three-column grid in
@@ -16,7 +16,7 @@ export function WorkGrid({ pieces }: { pieces: Artwork[] }) {
     return (
       <>
         <p className="sr-only">No work has been published yet.</p>
-        <div className={COLUMNS} aria-hidden="true">
+        <div className={NARROW_COLUMNS} aria-hidden="true">
           {PLACEHOLDER_RATIOS.map((ratio, index) => (
             <div
               key={index}
@@ -25,15 +25,44 @@ export function WorkGrid({ pieces }: { pieces: Artwork[] }) {
             />
           ))}
         </div>
+        <div className="hidden grid-cols-3 gap-5 lg:grid" aria-hidden="true">
+          {[0, 1, 2].map((column) => (
+            <div key={column}>
+              {PLACEHOLDER_RATIOS.filter((_, index) => index % 3 === column).map(
+                (ratio, index) => (
+                  <div
+                    key={index}
+                    className="mb-5 w-full bg-placeholder"
+                    style={{ aspectRatio: ratio }}
+                  />
+                ),
+              )}
+            </div>
+          ))}
+        </div>
       </>
     );
   }
 
   return (
-    <div className={COLUMNS}>
-      {pieces.map((piece, index) => (
-        <WorkTile key={piece._id} piece={piece} priority={index < 3} />
-      ))}
-    </div>
+    <>
+      <div className={NARROW_COLUMNS}>
+        {pieces.map((piece, index) => (
+          <WorkTile key={piece._id} piece={piece} priority={index < 3} />
+        ))}
+      </div>
+      <div className="hidden grid-cols-3 gap-5 lg:grid">
+        {[0, 1, 2].map((column) => (
+          <div key={column}>
+            {pieces
+              .map((piece, index) => ({ piece, index }))
+              .filter(({ index }) => index % 3 === column)
+              .map(({ piece, index }) => (
+                <WorkTile key={piece._id} piece={piece} priority={index < 3} />
+              ))}
+          </div>
+        ))}
+      </div>
+    </>
   );
 }

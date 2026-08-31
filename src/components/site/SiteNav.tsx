@@ -11,13 +11,13 @@ const ITEM = "block uppercase transition-colors duration-200";
 
 const CHILD_ITEM = "block uppercase transition-colors duration-200";
 
-export function SiteNav() {
+export function SiteNav({ sections = NAV_SECTIONS }: { sections?: NavSection[] }) {
   const pathname = usePathname();
 
   return (
     <nav aria-label="Sections">
       <ul className="text-[0.8125rem] font-light leading-[1.9] tracking-[0.05em]">
-        {NAV_SECTIONS.map((section) =>
+        {sections.map((section) =>
           section.children ? (
             <NavDisclosure
               key={section.href}

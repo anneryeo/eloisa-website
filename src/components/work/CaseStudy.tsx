@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { Media } from "@/components/Media";
 import { urlForImage } from "@/sanity/image";
 import type {
   Artwork,
@@ -56,14 +57,14 @@ function Section({
   return (
     <section className="space-y-6">
       {(section.heading || section.body) && (
-        <div className="max-w-3xl space-y-3">
+        <div className="w-full space-y-3">
           {section.heading && (
             <h2 className="text-xs font-medium uppercase tracking-[0.04em]">
               {section.heading}
             </h2>
           )}
           {section.body && (
-            <p className="whitespace-pre-line text-sm font-light leading-7">
+            <p className="whitespace-pre-line text-justify text-sm font-light leading-7">
               {section.body}
             </p>
           )}
@@ -99,6 +100,7 @@ export function CaseStudy({
   next?: Pick<Artwork, "title" | "slug">;
 }) {
   const hero = project.heroImage ?? project.image;
+  const usesPrimaryMedia = !project.heroImage && project.mediaType !== "image";
   const basePath = `/work/${workType}`;
 
   return (
@@ -123,7 +125,7 @@ export function CaseStudy({
         )}
       </nav>
 
-      <header className="mb-8 max-w-4xl space-y-2">
+      <header className="mb-8 w-full space-y-2">
         <h1 className="text-3xl font-medium uppercase leading-none tracking-[-0.035em] md:text-5xl">
           {project.title}
         </h1>
@@ -131,25 +133,37 @@ export function CaseStudy({
           {project.projectLabel ?? "WORK"}
         </p>
         {(project.descriptionAbove ?? project.description) && (
-          <p className="max-w-4xl pt-2 text-sm font-light leading-7">
+          <p className="w-full pt-2 text-justify text-sm font-light leading-7">
             {project.descriptionAbove ?? project.description}
           </p>
         )}
       </header>
 
       <div className="space-y-16 md:space-y-24">
-        {Boolean(hero) && (
+        {(Boolean(hero) || usesPrimaryMedia) && (
           <section className="space-y-7">
-            <ScrapbookImage
-              src={imageUrl(hero)}
-              alt={project.title}
-              ratio={project.heroAspectRatio ?? project.aspectRatio ?? 1.5}
-              seed={`${project._id}-hero`}
-              priority
-              subtle
-            />
+            {usesPrimaryMedia ? (
+              <div
+                className="relative w-full overflow-hidden bg-placeholder"
+                style={{
+                  aspectRatio:
+                    project.heroAspectRatio ?? project.aspectRatio ?? 16 / 9,
+                }}
+              >
+                <Media artwork={project} priority fullResolution />
+              </div>
+            ) : (
+              <ScrapbookImage
+                src={imageUrl(hero)}
+                alt={project.title}
+                ratio={project.heroAspectRatio ?? project.aspectRatio ?? 1.5}
+                seed={`${project._id}-hero`}
+                priority
+                subtle
+              />
+            )}
             {project.descriptionBelow && (
-              <p className="max-w-3xl whitespace-pre-line text-sm font-light leading-7">
+              <p className="w-full whitespace-pre-line text-justify text-sm font-light leading-7">
                 {project.descriptionBelow}
               </p>
             )}

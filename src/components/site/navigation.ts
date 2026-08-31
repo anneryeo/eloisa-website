@@ -15,19 +15,15 @@ export interface NavSection extends NavLink {
 }
 
 export const NAV_SECTIONS: NavSection[] = [
-  {
-    label: "Work",
-    href: "/",
-    // Sub-lists render lowercase per the comps. The comps drafted the second
-    // list as "work work", but the client settled on "professional".
-    children: [
-      { label: "personal", href: "/work/personal" },
-      { label: "professional", href: "/work/professional" },
-    ],
-  },
+  // Personal and Professional remain separate values in Sanity so no existing
+  // content or URLs are disturbed. The public gallery presents both together.
+  { label: "Work", href: "/" },
   { label: "About Me", href: "/about" },
-  // Temporarily hidden; uncomment to restore these sections to the site nav.
-  // { label: "Journal", href: "/journal" },
-  // { label: "FAQ", href: "/faq" },
+  { label: "Journal", href: "/journal" },
+  { label: "FAQ", href: "/faq" },
   { label: "Contact", href: "/contact" },
 ];
+
+export const NAV_LABELS: Record<string, string> = Object.fromEntries(
+  NAV_SECTIONS.map((section) => [section.href, section.label]),
+);

@@ -1,7 +1,7 @@
 import { client } from "./client";
 import { isSanityConfigured } from "./env";
 
-export type MediaType = "image" | "video" | "gif";
+export type MediaType = "image" | "video" | "socialVideo" | "gif";
 export type WorkType = "personal" | "professional";
 
 export interface Artwork {
@@ -13,8 +13,10 @@ export interface Artwork {
   workType?: WorkType;
   /** Sanity image ref (image pieces) or poster (video pieces). */
   image?: unknown;
+  poster?: unknown;
   /** Resolved CDN URL for the video/gif file asset. */
   fileUrl?: string;
+  socialVideoUrl?: string;
   /** width ÷ height of the source, used to size the tile in the masonry. */
   aspectRatio?: number;
   year?: number;
@@ -52,6 +54,8 @@ const FIELDS = `
   mediaType,
   workType,
   image,
+  poster,
+  socialVideoUrl,
   "fileUrl": select(
     mediaType == "video" => video.asset->url,
     mediaType == "gif"   => gif.asset->url
@@ -71,7 +75,7 @@ const CASE_STUDY_FIELDS = `
   "projectLabel": coalesce(projectLabel, "WORK"),
   "descriptionAbove": coalesce(descriptionAbove, description),
   descriptionBelow,
-  "heroImage": coalesce(heroImage, image, poster),
+  heroImage,
   "heroAspectRatio": coalesce(
     heroImage.asset->metadata.dimensions.aspectRatio,
     image.asset->metadata.dimensions.aspectRatio,
@@ -229,11 +233,38 @@ export interface SiteSettings {
   /** Wordmark lettering frames, already resolved for the sidebar cycler. */
   wordmarkFrames?: { _key: string; image: unknown; aspectRatio?: number }[];
   wordmarkInterval?: number;
+  wordmarkWidth?: number;
+  favicon?: unknown;
   bio?: string;
   footerHandle?: string;
   footerWebsite?: string;
   footerEmail?: string;
+  socialLinks?: SocialLink[];
+  siteSections?: SiteSection[];
   journalIntro?: string[];
+}
+
+export interface SiteSection {
+  _key: string;
+  path: "/" | "/about" | "/journal" | "/faq" | "/contact";
+  label?: string;
+  visible?: boolean;
+}
+
+export type SocialPlatform =
+  | "instagram"
+  | "tiktok"
+  | "facebook"
+  | "linkedin"
+  | "youtube"
+  | "behance"
+  | "other";
+
+export interface SocialLink {
+  _key: string;
+  platform: SocialPlatform;
+  label?: string;
+  url: string;
 }
 
 /** Site-wide chrome singleton; null when Sanity is unreachable or empty. */
@@ -249,10 +280,14 @@ export async function getSiteSettings(): Promise<SiteSettings | null> {
           "aspectRatio": asset->metadata.dimensions.aspectRatio
         },
         wordmarkInterval,
+        wordmarkWidth,
+        favicon,
         bio,
         footerHandle,
         footerWebsite,
         footerEmail,
+        socialLinks[]{ _key, platform, label, url },
+        siteSections[]{ _key, path, label, visible },
         journalIntro
       }`,
     );

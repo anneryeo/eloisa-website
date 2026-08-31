@@ -1,5 +1,6 @@
 import Image from "next/image";
 
+import { getSocialVideoEmbed } from "@/lib/socialVideo";
 import type { Artwork } from "@/sanity/queries";
 import { urlForImage } from "@/sanity/image";
 
@@ -21,17 +22,39 @@ export function Media({
   fullResolution?: boolean;
 }) {
   if (artwork.mediaType === "video" && artwork.fileUrl) {
+    const poster = artwork.poster
+      ? urlForImage(artwork.poster).width(1600).url()
+      : undefined;
     return (
       <video
         className="h-full w-full object-cover"
         src={artwork.fileUrl}
+        poster={poster}
         autoPlay
         muted
         loop
         playsInline
         preload="metadata"
+        controls={fullResolution}
       />
     );
+  }
+
+  if (artwork.mediaType === "socialVideo") {
+    const embed = getSocialVideoEmbed(artwork.socialVideoUrl);
+    if (embed) {
+      return (
+        <iframe
+          className="h-full w-full border-0 bg-placeholder"
+          src={embed.src}
+          title={`${artwork.title} on ${embed.platform}`}
+          loading={priority ? "eager" : "lazy"}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowFullScreen
+          referrerPolicy="strict-origin-when-cross-origin"
+        />
+      );
+    }
   }
 
   if (artwork.mediaType === "gif" && artwork.fileUrl) {

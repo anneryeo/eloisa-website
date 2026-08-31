@@ -28,6 +28,27 @@ export const siteSettings = defineType({
       validation: (rule) => rule.min(0.2).max(30),
     }),
     defineField({
+      name: "wordmarkWidth",
+      title: "Logo width",
+      description:
+        "Width of the image logo in pixels. The layout caps it so it remains responsive.",
+      type: "number",
+      initialValue: 190,
+      validation: (rule) => rule.min(120).max(260),
+    }),
+    defineField({
+      name: "favicon",
+      title: "Website favicon",
+      description: "Upload a square PNG, JPG, or WebP. A transparent PNG works best.",
+      type: "image",
+      options: { accept: "image/png,image/jpeg,image/webp" },
+      validation: (rule) =>
+        rule.custom((value) => {
+          if (!value) return true;
+          return value.asset ? true : "Upload a favicon image.";
+        }),
+    }),
+    defineField({
       name: "bio",
       title: "Sidebar bio",
       description: "The standing intro paragraph under the wordmark.",
@@ -48,6 +69,113 @@ export const siteSettings = defineType({
       name: "footerEmail",
       title: "Footer — email",
       type: "string",
+    }),
+    defineField({
+      name: "socialLinks",
+      title: "Social media links",
+      description:
+        "Add, remove, and reorder the icon links shown in the sidebar footer.",
+      type: "array",
+      of: [
+        {
+          type: "object",
+          name: "socialLink",
+          fields: [
+            defineField({
+              name: "platform",
+              title: "Platform",
+              type: "string",
+              options: {
+                list: [
+                  { title: "Instagram", value: "instagram" },
+                  { title: "TikTok", value: "tiktok" },
+                  { title: "Facebook", value: "facebook" },
+                  { title: "LinkedIn", value: "linkedin" },
+                  { title: "YouTube", value: "youtube" },
+                  { title: "Behance", value: "behance" },
+                  { title: "Other", value: "other" },
+                ],
+              },
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: "label",
+              title: "Accessible label",
+              description: 'Required only for "Other"; for example, "Dribbble".',
+              type: "string",
+            }),
+            defineField({
+              name: "url",
+              title: "Profile URL",
+              type: "url",
+              validation: (rule) =>
+                rule.required().uri({ scheme: ["http", "https"] }),
+            }),
+          ],
+          preview: {
+            select: { title: "platform", subtitle: "url" },
+          },
+        },
+      ],
+    }),
+    defineField({
+      name: "siteSections",
+      title: "Site navigation sections",
+      description:
+        "Add, remove, reorder, rename, or hide links in the public navigation. Removing a link does not delete its page or content.",
+      type: "array",
+      initialValue: [
+        { _type: "siteSection", path: "/", label: "Work", visible: true },
+        { _type: "siteSection", path: "/about", label: "About Me", visible: true },
+        { _type: "siteSection", path: "/journal", label: "Journal", visible: true },
+        { _type: "siteSection", path: "/faq", label: "FAQ", visible: true },
+        { _type: "siteSection", path: "/contact", label: "Contact", visible: true },
+      ],
+      of: [
+        {
+          type: "object",
+          name: "siteSection",
+          title: "Site section",
+          fields: [
+            defineField({
+              name: "path",
+              title: "Page",
+              type: "string",
+              options: {
+                list: [
+                  { title: "Work", value: "/" },
+                  { title: "About Me", value: "/about" },
+                  { title: "Journal", value: "/journal" },
+                  { title: "FAQ", value: "/faq" },
+                  { title: "Contact", value: "/contact" },
+                ],
+              },
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: "label",
+              title: "Navigation label",
+              description: "Optional custom label. Leave empty to use the page name.",
+              type: "string",
+            }),
+            defineField({
+              name: "visible",
+              title: "Show in navigation",
+              type: "boolean",
+              initialValue: true,
+            }),
+          ],
+          preview: {
+            select: { title: "label", subtitle: "path", visible: "visible" },
+            prepare({ title, subtitle, visible }) {
+              return {
+                title: title || subtitle,
+                subtitle: visible === false ? `${subtitle} — hidden` : subtitle,
+              };
+            },
+          },
+        },
+      ],
     }),
     defineField({
       name: "journalIntro",

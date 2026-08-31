@@ -132,7 +132,7 @@ export function JournalExplorer({
 function JournalIntro({ paragraphs }: { paragraphs?: string[] }) {
   const lines = paragraphs?.length ? paragraphs : FALLBACK_INTRO;
   return (
-    <div className="mb-10 max-w-[44ch] space-y-4 text-[0.8125rem] font-light leading-[1.9] text-ink">
+    <div className="mb-10 w-full space-y-4 text-justify text-[0.8125rem] font-light leading-[1.9] text-ink">
       {lines.map((line) => (
         <p key={line}>{line}</p>
       ))}
@@ -403,7 +403,7 @@ function JournalDetail({
             y: 0,
             transition: { duration: 0.45, ease: EASE, delay: 0.25 },
           }}
-          className="mt-8 max-w-[52ch] space-y-4 text-[0.8125rem] font-light leading-[1.9] text-ink"
+          className="mt-8 w-full space-y-4 text-justify text-[0.8125rem] font-light leading-[1.9] text-ink"
         >
           {entry.blurb && <p className="italic">{entry.blurb}</p>}
           {entry.note && <p>{entry.note}</p>}

@@ -63,12 +63,12 @@ export default async function AboutMePage() {
         />
       )}
 
-      <section className="max-w-[52ch]">
+      <section className="w-full">
         <h1 className="mb-6 font-mono text-[1.0625rem] font-bold uppercase tracking-[0.08em] text-accent">
           {about?.heading ?? FALLBACK_HEADING}
         </h1>
 
-        <div className="space-y-5 text-[0.8125rem] font-light leading-[1.9] text-ink">
+        <div className="space-y-5 text-justify text-[0.8125rem] font-light leading-[1.9] text-ink">
           {about?.bio ? (
             <PortableText value={about.bio as never} />
           ) : (

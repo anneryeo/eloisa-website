@@ -26,7 +26,7 @@ export default async function FaqPage() {
   const faqs = items.length > 0 ? items : FALLBACK_FAQS;
 
   return (
-    <div className="max-w-[52ch]">
+    <div className="w-full">
       <SectionHeading>FAQ</SectionHeading>
 
       <dl className="space-y-8">
@@ -35,7 +35,7 @@ export default async function FaqPage() {
             <dt className="mb-2 text-[0.8125rem] font-medium uppercase tracking-[0.05em] text-accent">
               {faq.question}
             </dt>
-            <dd className="text-[0.8125rem] font-light leading-[1.9] text-ink">
+            <dd className="text-justify text-[0.8125rem] font-light leading-[1.9] text-ink">
               {faq.answer}
             </dd>
           </div>
