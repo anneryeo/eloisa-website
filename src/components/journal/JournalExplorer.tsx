@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 
 import { WorkLightbox } from "@/components/work/WorkLightbox";
 import { SCRAPBOOK_SPRING, scrapbookTilt } from "@/components/work/WorkTile";
+import { RichText } from "@/components/RichText";
 import { urlForImage } from "@/sanity/image";
 import type { Artwork, JournalEntry } from "@/sanity/queries";
 
@@ -30,10 +31,12 @@ const EASE = [0.16, 1, 0.3, 1] as const;
 export function JournalExplorer({
   entries,
   intro,
+  introRich,
   initialSlug,
 }: {
   entries: JournalEntry[];
   intro?: string[];
+  introRich?: unknown[];
   initialSlug: string | null;
 }) {
   const [activeSlug, setActiveSlug] = useState(initialSlug);
@@ -65,7 +68,7 @@ export function JournalExplorer({
   if (entries.length === 0) {
     return (
       <>
-        <JournalIntro paragraphs={intro} />
+        <JournalIntro paragraphs={intro} richText={introRich} />
         <p className="sr-only">No journal entries have been published yet.</p>
         <div
           className="grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3"
@@ -112,7 +115,7 @@ export function JournalExplorer({
           animate={{ opacity: 1, transition: { duration: 0.35, ease: EASE } }}
           exit={{ opacity: 0, transition: { duration: 0.2 } }}
         >
-          <JournalIntro paragraphs={intro} />
+          <JournalIntro paragraphs={intro} richText={introRich} />
           <div className="grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
             {entries.map((entry, index) => (
               <JournalTile
@@ -129,7 +132,21 @@ export function JournalExplorer({
   );
 }
 
-function JournalIntro({ paragraphs }: { paragraphs?: string[] }) {
+function JournalIntro({
+  paragraphs,
+  richText,
+}: {
+  paragraphs?: string[];
+  richText?: unknown[];
+}) {
+  if (richText?.length) {
+    return (
+      <RichText
+        value={richText}
+        className="mb-10 w-full text-justify text-[0.8125rem] font-light leading-[1.9] text-ink"
+      />
+    );
+  }
   const lines = paragraphs?.length ? paragraphs : FALLBACK_INTRO;
   return (
     <div className="mb-10 w-full space-y-4 text-justify text-[0.8125rem] font-light leading-[1.9] text-ink">
@@ -395,7 +412,7 @@ function JournalDetail({
         )}
       </AnimatePresence>
 
-      {(entry.blurb || entry.note) && (
+      {(entry.blurbRich || entry.blurb || entry.noteRich || entry.note) && (
         <motion.div
           initial={{ opacity: 0, y: 14 }}
           animate={{
@@ -405,8 +422,11 @@ function JournalDetail({
           }}
           className="mt-8 w-full space-y-4 text-justify text-[0.8125rem] font-light leading-[1.9] text-ink"
         >
-          {entry.blurb && <p className="italic">{entry.blurb}</p>}
-          {entry.note && <p>{entry.note}</p>}
+          <RichText
+            value={entry.blurbRich ?? entry.blurb}
+            className={entry.blurbRich ? undefined : "italic"}
+          />
+          <RichText value={entry.noteRich ?? entry.note} />
         </motion.div>
       )}
     </motion.article>

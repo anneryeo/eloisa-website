@@ -1,5 +1,6 @@
 import { urlForImage } from "@/sanity/image";
 import { getSiteSettings } from "@/sanity/queries";
+import { RichText } from "@/components/RichText";
 import { SiteFooter } from "./SiteFooter";
 import { SiteNav } from "./SiteNav";
 import { SiteWordmark, type WordmarkFrame } from "./SiteWordmark";
@@ -42,9 +43,10 @@ export async function SiteSidebar() {
         width={settings?.wordmarkWidth}
       />
 
-      <p className="max-w-[34ch] text-[0.6875rem] font-light leading-[1.85] text-ink">
-        {settings?.bio ?? FALLBACK_BIO}
-      </p>
+      <RichText
+        value={settings?.bioRich ?? settings?.bio ?? FALLBACK_BIO}
+        className="max-w-[34ch] text-[0.6875rem] font-light leading-[1.85] text-ink"
+      />
 
       <SiteNav sections={sections} />
 

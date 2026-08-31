@@ -1,11 +1,12 @@
 import { SectionHeading } from "@/components/site/SectionHeading";
-import { getFaqItems } from "@/sanity/queries";
+import { RichText } from "@/components/RichText";
+import { getFaqItems, type FaqItem } from "@/sanity/queries";
 
 export const metadata = { title: "FAQ" };
 export const revalidate = 3600;
 
 /** Comp copy, shown whenever the CMS has no FAQ items yet. */
-const FALLBACK_FAQS = [
+const FALLBACK_FAQS: FaqItem[] = [
   {
     _id: "fallback-career",
     question: "How did you start your design career?",
@@ -35,8 +36,11 @@ export default async function FaqPage() {
             <dt className="mb-2 text-[0.8125rem] font-medium uppercase tracking-[0.05em] text-accent">
               {faq.question}
             </dt>
-            <dd className="text-justify text-[0.8125rem] font-light leading-[1.9] text-ink">
-              {faq.answer}
+            <dd>
+              <RichText
+                value={faq.answerRich ?? faq.answer}
+                className="text-justify text-[0.8125rem] font-light leading-[1.9] text-ink"
+              />
             </dd>
           </div>
         ))}

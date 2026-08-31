@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { Media } from "@/components/Media";
+import { RichText } from "@/components/RichText";
 import { urlForImage } from "@/sanity/image";
 import type {
   Artwork,
@@ -56,18 +57,17 @@ function Section({
 
   return (
     <section className="space-y-6">
-      {(section.heading || section.body) && (
+      {(section.heading || section.bodyRich || section.body) && (
         <div className="w-full space-y-3">
           {section.heading && (
             <h2 className="text-xs font-medium uppercase tracking-[0.04em]">
               {section.heading}
             </h2>
           )}
-          {section.body && (
-            <p className="whitespace-pre-line text-justify text-sm font-light leading-7">
-              {section.body}
-            </p>
-          )}
+          <RichText
+            value={section.bodyRich ?? section.body}
+            className="text-justify text-sm font-light leading-7"
+          />
         </div>
       )}
 
@@ -132,11 +132,14 @@ export function CaseStudy({
         <p className="text-[0.6875rem] font-medium uppercase tracking-[0.05em]">
           {project.projectLabel ?? "WORK"}
         </p>
-        {(project.descriptionAbove ?? project.description) && (
-          <p className="w-full pt-2 text-justify text-sm font-light leading-7">
-            {project.descriptionAbove ?? project.description}
-          </p>
-        )}
+        <RichText
+          value={
+            project.descriptionAboveRich ??
+            project.descriptionAbove ??
+            project.description
+          }
+          className="w-full pt-2 text-justify text-sm font-light leading-7"
+        />
       </header>
 
       <div className="space-y-16 md:space-y-24">
@@ -162,11 +165,10 @@ export function CaseStudy({
                 subtle
               />
             )}
-            {project.descriptionBelow && (
-              <p className="w-full whitespace-pre-line text-justify text-sm font-light leading-7">
-                {project.descriptionBelow}
-              </p>
-            )}
+            <RichText
+              value={project.descriptionBelowRich ?? project.descriptionBelow}
+              className="w-full text-justify text-sm font-light leading-7"
+            />
           </section>
         )}
 

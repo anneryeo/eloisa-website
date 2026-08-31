@@ -50,10 +50,18 @@ export const siteSettings = defineType({
     }),
     defineField({
       name: "bio",
-      title: "Sidebar bio",
+      title: "Sidebar bio (existing plain text)",
       description: "The standing intro paragraph under the wordmark.",
       type: "text",
       rows: 4,
+      readOnly: true,
+    }),
+    defineField({
+      name: "bioRich",
+      title: "Sidebar bio",
+      description:
+        "Formatted sidebar description. When empty, the existing plain-text bio remains visible.",
+      type: "richText",
     }),
     defineField({
       name: "footerHandle",
@@ -179,10 +187,18 @@ export const siteSettings = defineType({
     }),
     defineField({
       name: "journalIntro",
-      title: "Journal intro",
+      title: "Journal intro (existing plain text)",
       description: "Short paragraphs shown above the Journal grid.",
       type: "array",
       of: [{ type: "string" }],
+      readOnly: true,
+    }),
+    defineField({
+      name: "journalIntroRich",
+      title: "Journal intro",
+      description:
+        "Formatted Journal introduction. When empty, the existing paragraphs remain visible.",
+      type: "richText",
     }),
   ],
   preview: {

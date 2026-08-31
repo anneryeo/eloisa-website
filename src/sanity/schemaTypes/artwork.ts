@@ -148,6 +148,7 @@ export const artwork = defineType({
         "Existing project description. Used above the artwork when the new field below is empty.",
       type: "text",
       rows: 4,
+      readOnly: true,
     }),
     defineField({
       name: "descriptionAbove",
@@ -155,6 +156,14 @@ export const artwork = defineType({
       description: "Optional introduction shown between the project title and hero artwork.",
       type: "text",
       rows: 5,
+      readOnly: true,
+    }),
+    defineField({
+      name: "descriptionAboveRich",
+      title: "Description above artwork",
+      description:
+        "Formatted introduction. When empty, the existing plain-text description remains visible.",
+      type: "richText",
     }),
     defineField({
       name: "descriptionBelow",
@@ -162,6 +171,14 @@ export const artwork = defineType({
       description: "Optional closing description shown immediately below the hero artwork.",
       type: "text",
       rows: 5,
+      readOnly: true,
+    }),
+    defineField({
+      name: "descriptionBelowRich",
+      title: "Description below artwork",
+      description:
+        "Formatted closing text. When empty, the existing plain-text description remains visible.",
+      type: "richText",
     }),
     defineField({
       name: "projectLabel",
@@ -213,9 +230,17 @@ export const artwork = defineType({
             }),
             defineField({
               name: "body",
-              title: "Body",
+              title: "Body (existing plain text)",
               type: "text",
               rows: 5,
+              readOnly: true,
+            }),
+            defineField({
+              name: "bodyRich",
+              title: "Body",
+              description:
+                "Formatted section text. When empty, the existing plain-text body remains visible.",
+              type: "richText",
             }),
             defineField({
               name: "images",

@@ -24,6 +24,7 @@ export default async function JournalPage({
     <JournalExplorer
       entries={entries}
       intro={settings?.journalIntro}
+      introRich={settings?.journalIntroRich}
       initialSlug={params.e ?? null}
     />
   );

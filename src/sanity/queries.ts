@@ -24,7 +24,9 @@ export interface Artwork {
   dimensions?: string;
   description?: string;
   descriptionAbove?: string;
+  descriptionAboveRich?: unknown[];
   descriptionBelow?: string;
+  descriptionBelowRich?: unknown[];
   projectLabel?: string;
   heroImage?: unknown;
   heroAspectRatio?: number;
@@ -44,6 +46,7 @@ export interface CaseStudySection {
   layout: CaseStudyLayout;
   heading?: string;
   body?: string;
+  bodyRich?: unknown[];
   images?: CaseStudyImage[];
 }
 
@@ -74,7 +77,9 @@ const CASE_STUDY_FIELDS = `
   ${FIELDS},
   "projectLabel": coalesce(projectLabel, "WORK"),
   "descriptionAbove": coalesce(descriptionAbove, description),
+  descriptionAboveRich,
   descriptionBelow,
+  descriptionBelowRich,
   heroImage,
   "heroAspectRatio": coalesce(
     heroImage.asset->metadata.dimensions.aspectRatio,
@@ -86,6 +91,7 @@ const CASE_STUDY_FIELDS = `
     layout,
     heading,
     body,
+    bodyRich,
     "images": images[]{
       _key,
       "image": @,
@@ -171,7 +177,9 @@ export interface JournalEntry {
   coverAspectRatio?: number;
   gallery?: { _key: string; image: unknown; aspectRatio?: number }[];
   blurb?: string;
+  blurbRich?: unknown[];
   note?: string;
+  noteRich?: unknown[];
 }
 
 /** Journal entries in grid order; [] when Sanity is unreachable or empty. */
@@ -194,7 +202,9 @@ export async function getJournalEntries(): Promise<JournalEntry[]> {
           "aspectRatio": asset->metadata.dimensions.aspectRatio
         },
         blurb,
-        note
+        blurbRich,
+        note,
+        noteRich
       }`,
     );
   } catch {
@@ -206,6 +216,7 @@ export interface FaqItem {
   _id: string;
   question: string;
   answer: string;
+  answerRich?: unknown[];
 }
 
 /** FAQ items in page order; [] when Sanity is unreachable or empty. */
@@ -214,7 +225,7 @@ export async function getFaqItems(): Promise<FaqItem[]> {
 
   try {
     return await client.fetch<FaqItem[]>(
-      `*[_type == "faqItem"] | order(order asc){ _id, question, answer }`,
+      `*[_type == "faqItem"] | order(order asc){ _id, question, answer, answerRich }`,
     );
   } catch {
     return [];
@@ -236,12 +247,14 @@ export interface SiteSettings {
   wordmarkWidth?: number;
   favicon?: unknown;
   bio?: string;
+  bioRich?: unknown[];
   footerHandle?: string;
   footerWebsite?: string;
   footerEmail?: string;
   socialLinks?: SocialLink[];
   siteSections?: SiteSection[];
   journalIntro?: string[];
+  journalIntroRich?: unknown[];
 }
 
 export interface SiteSection {
@@ -283,12 +296,14 @@ export async function getSiteSettings(): Promise<SiteSettings | null> {
         wordmarkWidth,
         favicon,
         bio,
+        bioRich,
         footerHandle,
         footerWebsite,
         footerEmail,
         socialLinks[]{ _key, platform, label, url },
         siteSections[]{ _key, path, label, visible },
-        journalIntro
+        journalIntro,
+        journalIntroRich
       }`,
     );
   } catch {

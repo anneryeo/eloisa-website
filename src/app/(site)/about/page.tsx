@@ -1,6 +1,6 @@
-import { PortableText } from "next-sanity";
 import Image from "next/image";
 
+import { RichText } from "@/components/RichText";
 import { urlForImage } from "@/sanity/image";
 import { getAboutPage } from "@/sanity/queries";
 
@@ -69,11 +69,7 @@ export default async function AboutMePage() {
         </h1>
 
         <div className="space-y-5 text-justify text-[0.8125rem] font-light leading-[1.9] text-ink">
-          {about?.bio ? (
-            <PortableText value={about.bio as never} />
-          ) : (
-            FALLBACK_BIO
-          )}
+          {about?.bio ? <RichText value={about.bio} /> : FALLBACK_BIO}
         </div>
       </section>
     </div>

@@ -26,21 +26,7 @@ export const aboutPage = defineType({
     defineField({
       name: "bio",
       title: "Bio",
-      type: "array",
-      of: [
-        {
-          type: "block",
-          styles: [{ title: "Normal", value: "normal" }],
-          lists: [],
-          marks: {
-            decorators: [
-              { title: "Emphasis", value: "em" },
-              { title: "Strong", value: "strong" },
-            ],
-            annotations: [],
-          },
-        },
-      ],
+      type: "richText",
     }),
   ],
   preview: {

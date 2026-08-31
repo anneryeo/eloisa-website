@@ -21,9 +21,17 @@ export const category = defineType({
     }),
     defineField({
       name: "description",
-      title: "Description",
+      title: "Description (existing plain text)",
       type: "text",
       rows: 3,
+      readOnly: true,
+    }),
+    defineField({
+      name: "descriptionRich",
+      title: "Description",
+      description:
+        "Formatted category description. Existing plain text remains stored until replaced.",
+      type: "richText",
     }),
   ],
 });

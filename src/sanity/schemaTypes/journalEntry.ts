@@ -54,18 +54,34 @@ export const journalEntry = defineType({
     }),
     defineField({
       name: "blurb",
-      title: "Blurb",
+      title: "Blurb (existing plain text)",
       description:
         'What the event was — e.g. "Monster Academy: Illustrator 101. DLSU AdCreate Society"',
       type: "text",
       rows: 2,
+      readOnly: true,
+    }),
+    defineField({
+      name: "blurbRich",
+      title: "Blurb",
+      description:
+        "Formatted blurb. When empty, the existing plain-text blurb remains visible.",
+      type: "richText",
     }),
     defineField({
       name: "note",
-      title: "Personal note",
+      title: "Personal note (existing plain text)",
       description: 'Eloisa\'s own line — e.g. "This was my first discussion evah!"',
       type: "text",
       rows: 3,
+      readOnly: true,
+    }),
+    defineField({
+      name: "noteRich",
+      title: "Personal note",
+      description:
+        "Formatted note. When empty, the existing plain-text note remains visible.",
+      type: "richText",
     }),
     defineField({
       name: "order",

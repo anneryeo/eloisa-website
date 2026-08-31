@@ -14,10 +14,17 @@ export const faqItem = defineType({
     }),
     defineField({
       name: "answer",
-      title: "Answer",
+      title: "Answer (existing plain text)",
       type: "text",
       rows: 6,
-      validation: (rule) => rule.required(),
+      readOnly: true,
+    }),
+    defineField({
+      name: "answerRich",
+      title: "Answer",
+      description:
+        "Formatted answer. When empty, the existing plain-text answer remains visible.",
+      type: "richText",
     }),
     defineField({
       name: "order",

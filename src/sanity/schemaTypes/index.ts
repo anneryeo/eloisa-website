@@ -5,8 +5,17 @@ import { artwork } from "./artwork";
 import { category } from "./category";
 import { faqItem } from "./faqItem";
 import { journalEntry } from "./journalEntry";
+import { richText } from "./richText";
 import { siteSettings } from "./siteSettings";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
-  types: [artwork, category, journalEntry, faqItem, aboutPage, siteSettings],
+  types: [
+    richText,
+    artwork,
+    category,
+    journalEntry,
+    faqItem,
+    aboutPage,
+    siteSettings,
+  ],
 };
