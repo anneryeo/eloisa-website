@@ -1,4 +1,5 @@
 import { CursorSparkles } from "@/components/site/CursorSparkles";
+import { PolkaDotBackground } from "@/components/site/PolkaDotBackground";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { SiteSidebar } from "@/components/site/SiteSidebar";
 import { urlForImage } from "@/sanity/image";
@@ -28,7 +29,7 @@ export default async function SiteLayout({
 
   return (
     <div
-      className="cursor-funky min-h-screen px-7 py-10 lg:px-12 lg:py-0"
+      className="polka-site cursor-funky relative isolate min-h-screen px-7 py-10 lg:px-12 lg:py-0"
       style={
         customCursor
           ? ({
@@ -37,12 +38,13 @@ export default async function SiteLayout({
           : undefined
       }
     >
+      <PolkaDotBackground />
       <CursorSparkles />
-      <div className="mx-auto grid max-w-[1600px] grid-cols-1 gap-10 lg:grid-cols-[minmax(220px,300px)_1fr] lg:gap-20">
+      <div className="relative z-10 mx-auto grid max-w-[1600px] grid-cols-1 gap-10 lg:grid-cols-[minmax(220px,300px)_1fr] lg:gap-20">
         <SiteSidebar settings={settings} />
         <main className="min-w-0 lg:py-14">{children}</main>
       </div>
-      <div className="mx-auto mt-16 max-w-[1600px] border-t border-ink/20 py-8 lg:hidden">
+      <div className="relative z-10 mx-auto mt-16 max-w-[1600px] border-t border-ink/20 py-8 lg:hidden">
         <SiteFooter
           handle={settings?.footerHandle}
           website={settings?.footerWebsite}
