@@ -149,6 +149,7 @@ export const artwork = defineType({
       type: "text",
       rows: 4,
       readOnly: true,
+      hidden: true,
     }),
     defineField({
       name: "descriptionAbove",
@@ -157,6 +158,7 @@ export const artwork = defineType({
       type: "text",
       rows: 5,
       readOnly: true,
+      hidden: true,
     }),
     defineField({
       name: "descriptionAboveRich",
@@ -172,6 +174,7 @@ export const artwork = defineType({
       type: "text",
       rows: 5,
       readOnly: true,
+      hidden: true,
     }),
     defineField({
       name: "descriptionBelowRich",
