@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 
 const SPACING = 24;
-const DOT_RADIUS = 1.45;
+const DOT_RADIUS = 1.8;
 const CURSOR_RADIUS = 150;
 
 const SHIELD_SELECTOR = [
