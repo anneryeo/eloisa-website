@@ -22,8 +22,8 @@ export interface WordmarkFrame {
 export function SiteWordmark({
   frames = [],
   interval = 1.6,
-  width = 190,
-  mobileWidth = 150,
+  width = 260,
+  mobileWidth = 220,
 }: {
   frames?: WordmarkFrame[];
   interval?: number;

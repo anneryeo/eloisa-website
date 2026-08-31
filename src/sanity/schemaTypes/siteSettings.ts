@@ -33,7 +33,7 @@ export const siteSettings = defineType({
       description:
         "Width of the image logo in pixels on desktop. The layout caps it so it remains responsive.",
       type: "number",
-      initialValue: 190,
+      initialValue: 260,
       validation: (rule) => rule.min(100).max(300),
     }),
     defineField({
@@ -41,7 +41,7 @@ export const siteSettings = defineType({
       title: "Mobile logo width",
       description: "Width of the image logo in pixels on phones and tablets.",
       type: "number",
-      initialValue: 150,
+      initialValue: 220,
       validation: (rule) => rule.min(80).max(220),
     }),
     defineField({

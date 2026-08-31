@@ -15,12 +15,12 @@ body {
 }
 
 .site-wordmark {
-  width: var(--wordmark-mobile-width, 150px);
+  width: var(--wordmark-mobile-width, 220px);
 }
 
 @media (min-width: 1024px) {
   .site-wordmark {
-    width: var(--wordmark-width, 190px);
+    width: var(--wordmark-width, 260px);
   }
 }
 
