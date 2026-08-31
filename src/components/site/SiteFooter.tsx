@@ -93,7 +93,7 @@ export function SiteFooter({
         "flex text-[0.6875rem] font-light leading-4 text-ink",
         variant === "sidebar"
           ? "flex-col items-start gap-3"
-          : "flex-col items-start justify-between gap-4 sm:flex-row sm:items-center",
+          : "flex-col items-center justify-center gap-4 text-center",
       )}
     >
       <div className="flex flex-wrap items-center gap-2">
@@ -116,8 +116,8 @@ export function SiteFooter({
       </div>
       <div
         className={cx(
-          "flex flex-col items-start gap-1",
-          variant === "footer" ? "sm:items-end" : "",
+          "flex flex-col gap-1",
+          variant === "footer" ? "items-center" : "items-start",
         )}
       >
         {websiteHref && (
