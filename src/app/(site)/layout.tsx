@@ -1,6 +1,11 @@
 import { CursorSparkles } from "@/components/site/CursorSparkles";
 import { SiteSidebar } from "@/components/site/SiteSidebar";
 
+// The sidebar is CMS-driven and belongs to this shared layout. Keeping its ISR
+// policy here prevents static routes (notably Contact) from freezing an older
+// logo, bio, footer, or navigation configuration than the other sections.
+export const revalidate = 60;
+
 /**
  * Shell shared by every public section (Work, About Me, Journal, FAQ, Contact).
  * Lives in a route group so /studio stays outside it and renders bare.
