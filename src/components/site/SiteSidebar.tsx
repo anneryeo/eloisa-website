@@ -2,6 +2,7 @@ import { urlForImage } from "@/sanity/image";
 import type { SiteSettings } from "@/sanity/queries";
 import { RichText } from "@/components/RichText";
 import { MobileSiteNav, SiteNav } from "./SiteNav";
+import { SiteFooter } from "./SiteFooter";
 import { SiteWordmark, type WordmarkFrame } from "./SiteWordmark";
 import { NAV_LABELS, NAV_SECTIONS, type NavSection } from "./navigation";
 
@@ -51,6 +52,16 @@ export function SiteSidebar({ settings }: { settings: SiteSettings | null }) {
 
       <div className="hidden lg:block">
         <SiteNav sections={sections} />
+      </div>
+
+      <div className="mt-auto hidden pt-10 lg:block">
+        <SiteFooter
+          handle={settings?.footerHandle}
+          website={settings?.footerWebsite}
+          email={settings?.footerEmail}
+          socialLinks={settings?.socialLinks}
+          variant="sidebar"
+        />
       </div>
     </aside>
   );

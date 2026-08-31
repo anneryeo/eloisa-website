@@ -42,7 +42,7 @@ export default async function SiteLayout({
         <SiteSidebar settings={settings} />
         <main className="min-w-0 lg:py-14">{children}</main>
       </div>
-      <div className="mx-auto mt-16 max-w-[1600px] border-t border-ink/20 py-8 lg:mt-0">
+      <div className="mx-auto mt-16 max-w-[1600px] border-t border-ink/20 py-8 lg:hidden">
         <SiteFooter
           handle={settings?.footerHandle}
           website={settings?.footerWebsite}

@@ -1,4 +1,5 @@
 import type { SocialLink, SocialPlatform } from "@/sanity/queries";
+import { cx } from "@/lib/cx";
 
 function SocialIcon({ platform }: { platform: SocialPlatform }) {
   if (platform === "instagram") {
@@ -57,11 +58,13 @@ export function SiteFooter({
   website = "eloisaclaire.com",
   email = "hello@eloisaclaire.com",
   socialLinks,
+  variant = "footer",
 }: {
   handle?: string;
   website?: string;
   email?: string;
   socialLinks?: SocialLink[];
+  variant?: "sidebar" | "footer";
 }) {
   const socialHandle = (handle || "eloisaclairedesign").replace(/^@/, "");
   const websiteHref = website
@@ -85,7 +88,14 @@ export function SiteFooter({
       ];
 
   return (
-    <footer className="flex flex-col items-start justify-between gap-4 text-[0.6875rem] font-light leading-4 text-ink sm:flex-row sm:items-center">
+    <footer
+      className={cx(
+        "flex text-[0.6875rem] font-light leading-4 text-ink",
+        variant === "sidebar"
+          ? "flex-col items-start gap-3"
+          : "flex-col items-start justify-between gap-4 sm:flex-row sm:items-center",
+      )}
+    >
       <div className="flex flex-wrap items-center gap-2">
         {links.map((link) => {
           const label = link.label || PLATFORM_LABELS[link.platform];
@@ -97,14 +107,19 @@ export function SiteFooter({
               rel="noreferrer"
               aria-label={label}
               title={label}
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-ink transition-colors duration-200 hover:border-accent hover:text-accent"
+              className="flex h-7 w-7 items-center justify-center transition-colors duration-200 hover:text-accent"
             >
               <SocialIcon platform={link.platform} />
             </a>
           );
         })}
       </div>
-      <div className="flex flex-col items-start gap-1 sm:items-end">
+      <div
+        className={cx(
+          "flex flex-col items-start gap-1",
+          variant === "footer" ? "sm:items-end" : "",
+        )}
+      >
         {websiteHref && (
           <a
             href={websiteHref}
