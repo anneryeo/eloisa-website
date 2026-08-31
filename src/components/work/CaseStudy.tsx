@@ -100,7 +100,10 @@ export function CaseStudy({
   next?: Pick<Artwork, "title" | "slug">;
 }) {
   const hero = project.heroImage ?? project.image;
-  const usesPrimaryMedia = !project.heroImage && project.mediaType !== "image";
+  // A project whose primary artwork is motion must stay playable on its detail
+  // page. Posters and optional hero stills are fallbacks, not replacements for
+  // the uploaded video, GIF, or supported social embed.
+  const usesPrimaryMedia = project.mediaType !== "image";
   const basePath = `/work/${workType}`;
 
   return (
