@@ -31,6 +31,12 @@ export function SiteWordmark({
   mobileWidth?: number;
 }) {
   const [index, setIndex] = useState(0);
+  const resolvedWidth =
+    typeof width === "number" && Number.isFinite(width) ? width : 260;
+  const resolvedMobileWidth =
+    typeof mobileWidth === "number" && Number.isFinite(mobileWidth)
+      ? mobileWidth
+      : 220;
 
   useEffect(() => {
     if (frames.length < 2) return;
@@ -65,8 +71,8 @@ export function SiteWordmark({
       className="site-wordmark relative block max-w-full"
       style={
         {
-          "--wordmark-width": `${Math.min(300, Math.max(100, width))}px`,
-          "--wordmark-mobile-width": `${Math.min(220, Math.max(80, mobileWidth))}px`,
+          "--wordmark-width": `${Math.min(300, Math.max(100, resolvedWidth))}px`,
+          "--wordmark-mobile-width": `${Math.min(220, Math.max(80, resolvedMobileWidth))}px`,
           aspectRatio: "190 / 124",
         } as React.CSSProperties
       }
@@ -77,7 +83,7 @@ export function SiteWordmark({
           src={frame.url}
           alt=""
           fill
-          sizes={`(max-width: 1023px) ${Math.min(220, Math.max(80, mobileWidth))}px, ${Math.min(300, Math.max(100, width))}px`}
+          sizes={`(max-width: 1023px) ${Math.min(220, Math.max(80, resolvedMobileWidth))}px, ${Math.min(300, Math.max(100, resolvedWidth))}px`}
           priority={frameIndex === 0}
           className={cx(
             "object-contain object-left",

@@ -38,8 +38,8 @@ export function SiteSidebar({ settings }: { settings: SiteSettings | null }) {
         <SiteWordmark
           frames={frames}
           interval={settings?.wordmarkInterval}
-          width={settings?.wordmarkWidth}
-          mobileWidth={settings?.wordmarkMobileWidth}
+          width={settings?.wordmarkWidth ?? undefined}
+          mobileWidth={settings?.wordmarkMobileWidth ?? undefined}
         />
         <MobileSiteNav sections={sections} />
       </div>
