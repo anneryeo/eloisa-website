@@ -44,13 +44,15 @@ export function WorkTile({
   priority?: boolean;
 }) {
   const reducedMotion = useReducedMotion();
-  const gridPiece = piece.gridThumbnail
+  const usesGridOverride = piece.gridPreviewType && piece.gridPreviewType !== "main";
+  const gridPiece = usesGridOverride
     ? {
         ...piece,
-        mediaType: "image" as const,
-        image: piece.gridThumbnail,
-        fileUrl: undefined,
-        socialVideoUrl: undefined,
+        mediaType: piece.gridPreviewType as Artwork["mediaType"],
+        image: piece.gridPreviewType === "image" ? piece.gridThumbnail : undefined,
+        poster: piece.gridPoster,
+        fileUrl: piece.gridFileUrl,
+        socialVideoUrl: piece.gridSocialVideoUrl,
       }
     : piece;
 
@@ -68,8 +70,8 @@ export function WorkTile({
         style={{ aspectRatio: piece.aspectRatio ?? DEFAULT_RATIO }}
         className="group relative block w-full overflow-hidden bg-placeholder outline-offset-4 transition-shadow duration-300 ease-gallery hover:shadow-[0_14px_30px_-12px_rgba(30,30,30,0.35)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
       >
-        <div className={piece.mediaType === "socialVideo" ? "pointer-events-none h-full w-full" : "h-full w-full"}>
-          <Media artwork={gridPiece} priority={priority} />
+        <div className={gridPiece.mediaType === "socialVideo" ? "pointer-events-none h-full w-full" : "h-full w-full"}>
+          <Media artwork={gridPiece} priority={priority} thumbnailMode />
         </div>
         <span className="absolute inset-0 flex items-center justify-center bg-white/85 px-5 text-center opacity-0 transition-opacity duration-300 ease-gallery group-hover:opacity-100 group-focus-visible:opacity-100">
           <span className="font-mono text-sm font-bold uppercase tracking-[0.04em] text-ink">

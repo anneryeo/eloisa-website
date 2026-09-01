@@ -4,7 +4,10 @@ export interface SocialVideoEmbed {
 }
 
 /** Convert an editor-provided social URL into an allowlisted embed URL. */
-export function getSocialVideoEmbed(value?: string): SocialVideoEmbed | null {
+export function getSocialVideoEmbed(
+  value?: string,
+  options: { autoplay?: boolean } = {},
+): SocialVideoEmbed | null {
   if (!value) return null;
 
   try {
@@ -20,7 +23,9 @@ export function getSocialVideoEmbed(value?: string): SocialVideoEmbed | null {
       if (!id || !/^[\w-]{6,}$/.test(id)) return null;
       return {
         platform: "YouTube",
-        src: `https://www.youtube-nocookie.com/embed/${id}?rel=0`,
+        src: `https://www.youtube-nocookie.com/embed/${id}?rel=0${
+          options.autoplay ? `&autoplay=1&mute=1&loop=1&playlist=${id}` : ""
+        }`,
       };
     }
 
@@ -38,7 +43,9 @@ export function getSocialVideoEmbed(value?: string): SocialVideoEmbed | null {
       if (!id) return null;
       return {
         platform: "TikTok",
-        src: `https://www.tiktok.com/player/v1/${id}?controls=1&loop=1`,
+        src: `https://www.tiktok.com/player/v1/${id}?controls=${options.autoplay ? 0 : 1}&loop=1${
+          options.autoplay ? "&autoplay=1&mute=1" : ""
+        }`,
       };
     }
   } catch {

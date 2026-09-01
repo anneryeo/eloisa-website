@@ -27,12 +27,77 @@ export const artwork = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
-      name: "gridThumbnail",
-      title: "Work grid thumbnail",
+      name: "gridPreviewType",
+      title: "Work grid preview type",
       description:
-        "Optional separate picture used only on the Work grid. Use this when the project’s main picture or video does not make a good thumbnail. Adjust its crop with the hotspot tool.",
+        "Choose media used only on the Work grid. Reuse main media keeps the project’s primary picture or video.",
+      type: "string",
+      options: {
+        list: [
+          { title: "Reuse main media", value: "main" },
+          { title: "Separate picture", value: "image" },
+          { title: "Looping uploaded video", value: "video" },
+          { title: "GIF", value: "gif" },
+          { title: "Social video link", value: "socialVideo" },
+        ],
+        layout: "radio",
+      },
+      initialValue: "main",
+    }),
+    defineField({
+      name: "gridThumbnail",
+      title: "Grid picture",
+      description:
+        "A separate picture used only on the Work grid. Adjust its crop with the hotspot tool.",
       type: "image",
       options: { hotspot: true },
+      hidden: ({ parent }) => parent?.gridPreviewType !== "image",
+    }),
+    defineField({
+      name: "gridVideo",
+      title: "Grid video",
+      description: "Upload an MP4 or WebM. It plays muted, automatically, and on a loop.",
+      type: "file",
+      options: { accept: "video/mp4,video/webm" },
+      hidden: ({ parent }) => parent?.gridPreviewType !== "video",
+    }),
+    defineField({
+      name: "gridVideoPoster",
+      title: "Grid video poster",
+      description: "Optional still shown while the looping video loads.",
+      type: "image",
+      options: { hotspot: true },
+      hidden: ({ parent }) => parent?.gridPreviewType !== "video",
+    }),
+    defineField({
+      name: "gridGif",
+      title: "Grid GIF",
+      type: "file",
+      options: { accept: "image/gif" },
+      hidden: ({ parent }) => parent?.gridPreviewType !== "gif",
+    }),
+    defineField({
+      name: "gridSocialVideoUrl",
+      title: "Grid social video URL",
+      description:
+        "Paste a public YouTube, Instagram, or TikTok video URL. Muted autoplay is requested but the platform or visitor’s browser may block it.",
+      type: "url",
+      hidden: ({ parent }) => parent?.gridPreviewType !== "socialVideo",
+      validation: (rule) =>
+        rule.uri({ scheme: ["http", "https"] }).custom((value, context) => {
+          if ((context.parent as { gridPreviewType?: string })?.gridPreviewType !== "socialVideo") return true;
+          if (!value) return "A social video URL is required.";
+          try {
+            const host = new URL(value).hostname.replace(/^www\./, "");
+            return ["youtube.com", "youtu.be", "instagram.com", "tiktok.com"].some(
+              (domain) => host === domain || host.endsWith(`.${domain}`),
+            )
+              ? true
+              : "Use a YouTube, Instagram, or TikTok URL.";
+          } catch {
+            return "Enter a valid URL.";
+          }
+        }),
     }),
     defineField({
       name: "mediaType",

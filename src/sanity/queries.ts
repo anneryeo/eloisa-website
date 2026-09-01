@@ -13,7 +13,10 @@ export interface Artwork {
   workType?: WorkType;
   /** Optional grid-only image, independent from the project page's main media. */
   gridThumbnail?: unknown;
-  gridAspectRatio?: number;
+  gridPreviewType?: "main" | MediaType;
+  gridPoster?: unknown;
+  gridFileUrl?: string;
+  gridSocialVideoUrl?: string;
   /** Sanity image ref (image pieces) or poster (video pieces). */
   image?: unknown;
   poster?: unknown;
@@ -74,7 +77,14 @@ const FIELDS = `
   "slug": slug.current,
   mediaType,
   workType,
+  "gridPreviewType": coalesce(gridPreviewType, select(defined(gridThumbnail) => "image", "main")),
   gridThumbnail,
+  "gridPoster": gridVideoPoster,
+  gridSocialVideoUrl,
+  "gridFileUrl": select(
+    gridPreviewType == "video" => gridVideo.asset->url,
+    gridPreviewType == "gif" => gridGif.asset->url
+  ),
   image,
   poster,
   socialVideoUrl,
@@ -84,6 +94,7 @@ const FIELDS = `
   ),
   "aspectRatio": coalesce(
     gridThumbnail.asset->metadata.dimensions.aspectRatio,
+    gridVideoPoster.asset->metadata.dimensions.aspectRatio,
     image.asset->metadata.dimensions.aspectRatio,
     poster.asset->metadata.dimensions.aspectRatio
   ),

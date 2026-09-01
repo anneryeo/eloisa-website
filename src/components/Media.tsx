@@ -17,11 +17,13 @@ export function Media({
   priority = false,
   fullResolution = false,
   fit = "cover",
+  thumbnailMode = false,
 }: {
   artwork: Artwork;
   priority?: boolean;
   fullResolution?: boolean;
   fit?: "cover" | "contain";
+  thumbnailMode?: boolean;
 }) {
   const fitClass = fit === "contain" ? "object-contain" : "object-cover";
 
@@ -45,7 +47,9 @@ export function Media({
   }
 
   if (artwork.mediaType === "socialVideo") {
-    const embed = getSocialVideoEmbed(artwork.socialVideoUrl);
+    const embed = getSocialVideoEmbed(artwork.socialVideoUrl, {
+      autoplay: thumbnailMode,
+    });
     if (embed) {
       return (
         <iframe
