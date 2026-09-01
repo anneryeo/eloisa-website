@@ -12,6 +12,7 @@ export function ScrapbookImage({
   seed,
   priority = false,
   subtle = false,
+  onOpen,
 }: {
   src: string;
   alt: string;
@@ -19,11 +20,12 @@ export function ScrapbookImage({
   seed: string;
   priority?: boolean;
   subtle?: boolean;
+  onOpen?: () => void;
 }) {
   const reducedMotion = useReducedMotion();
   const tilt = subtle ? scrapbookTilt(seed) * 0.18 : scrapbookTilt(seed) * 0.65;
 
-  return (
+  const image = (
     <motion.figure
       className="relative w-full overflow-hidden bg-placeholder shadow-[0_12px_28px_-18px_rgba(30,30,30,0.55)]"
       style={{ aspectRatio: ratio, rotate: reducedMotion ? 0 : tilt }}
@@ -41,5 +43,18 @@ export function ScrapbookImage({
         priority={priority}
       />
     </motion.figure>
+  );
+
+  if (!onOpen) return image;
+
+  return (
+    <button
+      type="button"
+      onClick={onOpen}
+      aria-label={`Open ${alt} in focus mode`}
+      className="block w-full cursor-zoom-in text-left outline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+    >
+      {image}
+    </button>
   );
 }

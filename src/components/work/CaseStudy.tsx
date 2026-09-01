@@ -1,4 +1,8 @@
+"use client";
+
+import { AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import { useState } from "react";
 
 import { Media } from "@/components/Media";
 import { RichText } from "@/components/RichText";
@@ -11,30 +15,42 @@ import type {
   WorkScope,
 } from "@/sanity/queries";
 import { ScrapbookImage } from "./ScrapbookImage";
+import { WorkLightbox } from "./WorkLightbox";
 
 function imageUrl(image: unknown) {
   return urlForImage(image as object).quality(95).url();
 }
 
-function ProjectMedia({ item, title, priority }: { item: CaseStudyMediaItem; title: string; priority?: boolean }) {
+function mediaItemAsArtwork(item: CaseStudyMediaItem, title: string): Artwork {
+  return {
+    _id: item._key,
+    title: item.caption || title,
+    slug: "",
+    mediaType: item.mediaType,
+    image: item.image,
+    poster: item.poster,
+    fileUrl: item.fileUrl,
+    socialVideoUrl: item.socialVideoUrl,
+    aspectRatio: item.aspectRatio,
+  };
+}
+
+function ProjectMedia({ item, title, priority, onOpen }: { item: CaseStudyMediaItem; title: string; priority?: boolean; onOpen: () => void }) {
   return (
     <div
       className="relative w-full overflow-hidden bg-placeholder"
       style={{ aspectRatio: item.aspectRatio ?? 16 / 9 }}
     >
       <Media
-        artwork={{
-          _id: item._key,
-          title: item.caption || title,
-          slug: "",
-          mediaType: item.mediaType,
-          image: item.image,
-          poster: item.poster,
-          fileUrl: item.fileUrl,
-          socialVideoUrl: item.socialVideoUrl,
-        }}
+        artwork={mediaItemAsArtwork(item, title)}
         priority={priority}
         fullResolution
+      />
+      <button
+        type="button"
+        onClick={onOpen}
+        aria-label={`Open ${item.caption || title} in focus mode`}
+        className="absolute inset-0 z-10 cursor-zoom-in outline-offset-[-4px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
       />
     </div>
   );
@@ -46,12 +62,14 @@ function ProjectImage({
   seed,
   priority,
   subtle,
+  onOpen,
 }: {
   item: CaseStudyImage;
   title: string;
   seed: string;
   priority?: boolean;
   subtle?: boolean;
+  onOpen: () => void;
 }) {
   return (
     <ScrapbookImage
@@ -61,6 +79,7 @@ function ProjectImage({
       seed={seed}
       priority={priority}
       subtle={subtle}
+      onOpen={onOpen}
     />
   );
 }
@@ -68,9 +87,11 @@ function ProjectImage({
 function Section({
   section,
   title,
+  onOpen,
 }: {
   section: CaseStudySection;
   title: string;
+  onOpen: (key: string) => void;
 }) {
   const images = section.images?.filter((item) => item.image) ?? [];
   const mediaItems = section.mediaItems?.filter(
@@ -112,6 +133,7 @@ function Section({
                   key={item._key}
                   item={item}
                   title={`${title} — media ${index + 1}`}
+                  onOpen={() => onOpen(item._key)}
                 />
               ))
             : images.map((item, index) => (
@@ -121,6 +143,7 @@ function Section({
                   title={`${title} — image ${index + 1}`}
                   seed={`${section._key}-${item._key}`}
                   subtle={section.layout === "full"}
+                  onOpen={() => onOpen(item._key)}
                 />
               ))}
         </div>
@@ -140,6 +163,7 @@ export function CaseStudy({
   previous?: Pick<Artwork, "title" | "slug">;
   next?: Pick<Artwork, "title" | "slug">;
 }) {
+  const [focusedKey, setFocusedKey] = useState<string | null>(null);
   const hero = project.heroImage ?? project.image;
   // A project whose primary artwork is motion must stay playable on its detail
   // page. Posters and optional hero stills are fallbacks, not replacements for
@@ -151,6 +175,43 @@ export function CaseStudy({
     large: "w-full md:w-3/4",
     medium: "w-full md:w-1/2",
   }[project.mainMediaWidth ?? "full"];
+  const focusItems: Artwork[] = [];
+
+  if (usesPrimaryMedia) {
+    focusItems.push({ ...project, _id: "main" });
+  } else if (hero) {
+    focusItems.push({
+      ...project,
+      _id: "main",
+      mediaType: "image",
+      image: hero,
+      aspectRatio: project.heroAspectRatio ?? project.aspectRatio,
+    });
+  }
+
+  project.caseStudySections?.forEach((section) => {
+    const mediaItems = section.mediaItems?.filter(
+      (item) => item.image || item.fileUrl || item.socialVideoUrl,
+    );
+    if (mediaItems?.length) {
+      mediaItems.forEach((item, index) =>
+        focusItems.push(mediaItemAsArtwork(item, `${project.title} — media ${index + 1}`)),
+      );
+    } else {
+      section.images?.filter((item) => item.image).forEach((item, index) =>
+        focusItems.push({
+          _id: item._key,
+          title: `${project.title} — image ${index + 1}`,
+          slug: "",
+          mediaType: "image",
+          image: item.image,
+          aspectRatio: item.aspectRatio,
+        }),
+      );
+    }
+  });
+
+  const focusedIndex = focusItems.findIndex((item) => item._id === focusedKey);
 
   return (
     <article className="pb-24">
@@ -208,6 +269,12 @@ export function CaseStudy({
                   fullResolution
                   fit={project.mainMediaFit ?? "contain"}
                 />
+                <button
+                  type="button"
+                  onClick={() => setFocusedKey("main")}
+                  aria-label={`Open ${project.title} in focus mode`}
+                  className="absolute inset-0 z-10 cursor-zoom-in outline-offset-[-4px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+                />
               </div>
             ) : (
               <ScrapbookImage
@@ -217,6 +284,7 @@ export function CaseStudy({
                 seed={`${project._id}-hero`}
                 priority
                 subtle
+                onOpen={() => setFocusedKey("main")}
               />
             )}
             <RichText
@@ -227,9 +295,37 @@ export function CaseStudy({
         )}
 
         {project.caseStudySections?.map((section) => (
-          <Section key={section._key} section={section} title={project.title} />
+          <Section
+            key={section._key}
+            section={section}
+            title={project.title}
+            onOpen={setFocusedKey}
+          />
         ))}
       </div>
+
+      <AnimatePresence>
+        {focusedIndex >= 0 && focusItems[focusedIndex] && (
+          <WorkLightbox
+            piece={focusItems[focusedIndex]}
+            onClose={() => setFocusedKey(null)}
+            onPrev={
+              focusItems.length > 1
+                ? () =>
+                    setFocusedKey(
+                      focusItems[(focusedIndex - 1 + focusItems.length) % focusItems.length]._id,
+                    )
+                : undefined
+            }
+            onNext={
+              focusItems.length > 1
+                ? () =>
+                    setFocusedKey(focusItems[(focusedIndex + 1) % focusItems.length]._id)
+                : undefined
+            }
+          />
+        )}
+      </AnimatePresence>
     </article>
   );
 }
