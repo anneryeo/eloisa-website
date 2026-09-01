@@ -42,6 +42,10 @@ Every formatted description/body editor supports Bold, Italic, Underline, Strike
 
 Formatted text also has **Large heading**, **Medium heading**, and **Small heading** block styles. Case study sections provide a separate **Heading size** control; section headings render bold by default so they remain visually distinct from body copy.
 
+Every main Work-grid tile links to the unified `/work/artwork/[slug]` focus view. Previous and Next cycle through the complete ordered Artwork collection; legacy Personal and Professional URLs remain valid.
+
+The **Contact page** document controls its heading, formatted introduction, and an ordered list of contact methods. Each method has a label, displayed text, and an `https:`, `mailto:`, or `tel:` destination.
+
 ## Why media is modeled this way
 
 - **Images** go through Sanity's transform pipeline so the site can request exactly the sizes it needs — the source stays high-resolution while the browser gets a lean AVIF/WebP.

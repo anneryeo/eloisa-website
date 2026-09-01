@@ -2,14 +2,14 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { CaseStudy } from "@/components/work/CaseStudy";
-import { getWorkProject, type WorkType } from "@/sanity/queries";
+import { getWorkProject, type WorkScope } from "@/sanity/queries";
 
 export const revalidate = 3600;
 
-const WORK_TYPES: WorkType[] = ["personal", "professional"];
+const WORK_TYPES: WorkScope[] = ["artwork", "personal", "professional"];
 
-function parseWorkType(value: string): WorkType | null {
-  return WORK_TYPES.includes(value as WorkType) ? (value as WorkType) : null;
+function parseWorkType(value: string): WorkScope | null {
+  return WORK_TYPES.includes(value as WorkScope) ? (value as WorkScope) : null;
 }
 
 export async function generateMetadata({

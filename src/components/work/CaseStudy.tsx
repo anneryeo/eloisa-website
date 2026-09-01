@@ -8,7 +8,7 @@ import type {
   CaseStudyImage,
   CaseStudyMediaItem,
   CaseStudySection,
-  WorkType,
+  WorkScope,
 } from "@/sanity/queries";
 import { ScrapbookImage } from "./ScrapbookImage";
 
@@ -136,7 +136,7 @@ export function CaseStudy({
   next,
 }: {
   project: Artwork;
-  workType: WorkType;
+  workType: WorkScope;
   previous?: Pick<Artwork, "title" | "slug">;
   next?: Pick<Artwork, "title" | "slug">;
 }) {

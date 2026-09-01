@@ -3,6 +3,7 @@ import { isSanityConfigured } from "./env";
 
 export type MediaType = "image" | "video" | "socialVideo" | "gif";
 export type WorkType = "personal" | "professional";
+export type WorkScope = WorkType | "artwork";
 
 export interface Artwork {
   _id: string;
@@ -185,7 +186,7 @@ export function getWorkByType(workType: WorkType): Promise<Artwork[]> {
 
 /** One project plus its neighbours within the same Work section. */
 export async function getWorkProject(
-  workType: WorkType,
+  workType: WorkScope,
   slug: string,
 ): Promise<{
   project: Artwork;
@@ -195,8 +196,12 @@ export async function getWorkProject(
   if (!isSanityConfigured) return null;
 
   try {
+    const filter =
+      workType === "artwork"
+        ? `_type == "artwork"`
+        : `_type == "artwork" && coalesce(workType, "professional") == $workType`;
     const projects = await client.fetch<Artwork[]>(
-      `*[_type == "artwork" && coalesce(workType, "professional") == $workType] | order(order asc){${CASE_STUDY_FIELDS}}`,
+      `*[${filter}] | order(order asc){${CASE_STUDY_FIELDS}}`,
       { workType },
     );
     const index = projects.findIndex((project) => project.slug === slug);
@@ -211,6 +216,30 @@ export async function getWorkProject(
       previous: projects.length > 1 ? previous : undefined,
       next: projects.length > 1 ? next : undefined,
     };
+  } catch {
+    return null;
+  }
+}
+
+export interface ContactMethod {
+  _key: string;
+  label: string;
+  displayText: string;
+  url: string;
+}
+
+export interface ContactPageContent {
+  heading?: string;
+  intro?: unknown[];
+  contactMethods?: ContactMethod[];
+}
+
+export async function getContactPage(): Promise<ContactPageContent | null> {
+  if (!isSanityConfigured) return null;
+  try {
+    return await client.fetch<ContactPageContent | null>(
+      `*[_type == "contactPage"][0]{heading, intro, contactMethods[]{_key,label,displayText,url}}`,
+    );
   } catch {
     return null;
   }

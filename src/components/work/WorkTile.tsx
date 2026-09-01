@@ -58,7 +58,7 @@ export function WorkTile({
 
   return (
     <figure className="mb-5 break-inside-avoid">
-      <Link href={`/work/${piece.workType ?? "professional"}/${piece.slug}`}>
+      <Link href={`/work/artwork/${piece.slug}`}>
       <motion.div
         whileHover={
           reducedMotion

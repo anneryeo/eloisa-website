@@ -2,19 +2,20 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { WorkGrid } from "@/components/work/WorkGrid";
-import { getWorkByType, type WorkType } from "@/sanity/queries";
+import { getAllWork, getWorkByType, type WorkScope, type WorkType } from "@/sanity/queries";
 
 export const revalidate = 3600;
 
-const WORK_TYPES: WorkType[] = ["personal", "professional"];
+const WORK_TYPES: WorkScope[] = ["artwork", "personal", "professional"];
 
-const LABELS: Record<WorkType, string> = {
+const LABELS: Record<WorkScope, string> = {
+  artwork: "Artwork",
   personal: "Personal",
   professional: "Professional",
 };
 
-function parseWorkType(value: string): WorkType | null {
-  return WORK_TYPES.includes(value as WorkType) ? (value as WorkType) : null;
+function parseWorkType(value: string): WorkScope | null {
+  return WORK_TYPES.includes(value as WorkScope) ? (value as WorkScope) : null;
 }
 
 export function generateStaticParams() {
@@ -39,7 +40,8 @@ export default async function WorkTypePage({
   const workType = parseWorkType((await params).workType);
   if (!workType) notFound();
 
-  const pieces = await getWorkByType(workType);
+  const pieces =
+    workType === "artwork" ? await getAllWork() : await getWorkByType(workType as WorkType);
 
   return <WorkGrid pieces={pieces} />;
 }
