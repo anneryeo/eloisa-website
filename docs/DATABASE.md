@@ -32,6 +32,8 @@ The core piece. Media is one of four kinds, chosen by the **Media type** field:
 
 Other fields: `title`, `slug`, `year`, `medium`, `dimensions`, formatted descriptions, `featured` (surface on the front gallery), and `order` (sort — lower first). Legacy category and Personal/Professional values remain stored for compatibility but are no longer shown to editors.
 
+**Work grid thumbnail** is independent from the project’s main media. Leave it empty to reuse the main media, or upload a grid-specific picture and adjust its hotspot crop. This allows a photo in the grid to open a project whose first media is a video. **Main media size** controls the project-page width, while **Main media fit** chooses between showing the complete media or filling/cropping its frame.
+
 To add a social preview, choose **Social video link**, paste the public post URL, and publish. Use the canonical browser URL—not a creator profile, shortened Instagram redirect, or private post. The site validates supported hosts and turns the URL into an embedded player.
 
 For more than one media item, add a **Case study section**, choose its layout, then add up to three items under **Media**. Each section can mix pictures, uploaded MP4/WebM videos, GIFs, and supported social-video links. Add more sections when a project needs more than three items or a different layout.

@@ -11,6 +11,9 @@ export interface Artwork {
   mediaType: MediaType;
   /** Which Work sub-list the piece belongs to. */
   workType?: WorkType;
+  /** Optional grid-only image, independent from the project page's main media. */
+  gridThumbnail?: unknown;
+  gridAspectRatio?: number;
   /** Sanity image ref (image pieces) or poster (video pieces). */
   image?: unknown;
   poster?: unknown;
@@ -28,6 +31,8 @@ export interface Artwork {
   descriptionBelow?: string;
   descriptionBelowRich?: unknown[];
   projectLabel?: string;
+  mainMediaWidth?: "full" | "large" | "medium";
+  mainMediaFit?: "contain" | "cover";
   heroImage?: unknown;
   heroAspectRatio?: number;
   caseStudySections?: CaseStudySection[];
@@ -68,6 +73,7 @@ const FIELDS = `
   "slug": slug.current,
   mediaType,
   workType,
+  gridThumbnail,
   image,
   poster,
   socialVideoUrl,
@@ -76,6 +82,7 @@ const FIELDS = `
     mediaType == "gif"   => gif.asset->url
   ),
   "aspectRatio": coalesce(
+    gridThumbnail.asset->metadata.dimensions.aspectRatio,
     image.asset->metadata.dimensions.aspectRatio,
     poster.asset->metadata.dimensions.aspectRatio
   ),
@@ -88,6 +95,8 @@ const FIELDS = `
 const CASE_STUDY_FIELDS = `
   ${FIELDS},
   "projectLabel": coalesce(projectLabel, "WORK"),
+  "mainMediaWidth": coalesce(mainMediaWidth, "full"),
+  "mainMediaFit": coalesce(mainMediaFit, "contain"),
   "descriptionAbove": coalesce(descriptionAbove, description),
   descriptionAboveRich,
   descriptionBelow,

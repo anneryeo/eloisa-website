@@ -16,18 +16,22 @@ export function Media({
   artwork,
   priority = false,
   fullResolution = false,
+  fit = "cover",
 }: {
   artwork: Artwork;
   priority?: boolean;
   fullResolution?: boolean;
+  fit?: "cover" | "contain";
 }) {
+  const fitClass = fit === "contain" ? "object-contain" : "object-cover";
+
   if (artwork.mediaType === "video" && artwork.fileUrl) {
     const poster = artwork.poster
       ? urlForImage(artwork.poster).width(1600).url()
       : undefined;
     return (
       <video
-        className="h-full w-full object-cover"
+        className={`h-full w-full ${fitClass}`}
         src={artwork.fileUrl}
         poster={poster}
         autoPlay
@@ -62,7 +66,7 @@ export function Media({
       // next/image would freeze the animation, so a raw <img> is intentional.
       // eslint-disable-next-line @next/next/no-img-element
       <img
-        className="h-full w-full object-cover"
+        className={`h-full w-full ${fitClass}`}
         src={artwork.fileUrl}
         alt={artwork.title}
         loading={priority ? "eager" : "lazy"}
@@ -83,7 +87,7 @@ export function Media({
 
   return (
     <Image
-      className="h-full w-full object-cover"
+      className={`h-full w-full ${fitClass}`}
       src={src}
       alt={artwork.title}
       fill

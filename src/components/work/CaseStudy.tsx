@@ -141,6 +141,11 @@ export function CaseStudy({
   // the uploaded video, GIF, or supported social embed.
   const usesPrimaryMedia = project.mediaType !== "image";
   const basePath = `/work/${workType}`;
+  const mainMediaWidth = {
+    full: "w-full",
+    large: "w-full md:w-3/4",
+    medium: "w-full md:w-1/2",
+  }[project.mainMediaWidth ?? "full"];
 
   return (
     <article className="pb-24">
@@ -183,7 +188,7 @@ export function CaseStudy({
 
       <div className="space-y-16 md:space-y-24">
         {(Boolean(hero) || usesPrimaryMedia) && (
-          <section className="space-y-7">
+          <section className={`space-y-7 ${mainMediaWidth}`}>
             {usesPrimaryMedia ? (
               <div
                 className="relative w-full overflow-hidden bg-placeholder"
@@ -192,7 +197,12 @@ export function CaseStudy({
                     project.heroAspectRatio ?? project.aspectRatio ?? 16 / 9,
                 }}
               >
-                <Media artwork={project} priority fullResolution />
+                <Media
+                  artwork={project}
+                  priority
+                  fullResolution
+                  fit={project.mainMediaFit ?? "contain"}
+                />
               </div>
             ) : (
               <ScrapbookImage

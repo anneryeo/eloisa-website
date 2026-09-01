@@ -27,6 +27,14 @@ export const artwork = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: "gridThumbnail",
+      title: "Work grid thumbnail",
+      description:
+        "Optional separate picture used only on the Work grid. Use this when the project’s main picture or video does not make a good thumbnail. Adjust its crop with the hotspot tool.",
+      type: "image",
+      options: { hotspot: true },
+    }),
+    defineField({
       name: "mediaType",
       title: "Media type",
       description:
@@ -168,6 +176,36 @@ export const artwork = defineType({
       description: 'Small label above the intro. Defaults to "WORK".',
       type: "string",
       initialValue: "WORK",
+    }),
+    defineField({
+      name: "mainMediaWidth",
+      title: "Main media size on project page",
+      description: "Controls the width of the first picture or video after the project title.",
+      type: "string",
+      options: {
+        list: [
+          { title: "Full width", value: "full" },
+          { title: "Large (75%)", value: "large" },
+          { title: "Medium (50%)", value: "medium" },
+        ],
+        layout: "radio",
+      },
+      initialValue: "full",
+    }),
+    defineField({
+      name: "mainMediaFit",
+      title: "Main media fit",
+      description:
+        "Fit shows the whole picture/video with possible empty space. Fill covers the frame and may crop edges.",
+      type: "string",
+      options: {
+        list: [
+          { title: "Fit — do not crop", value: "contain" },
+          { title: "Fill — crop edges if needed", value: "cover" },
+        ],
+        layout: "radio",
+      },
+      initialValue: "contain",
     }),
     defineField({
       name: "heroImage",
