@@ -76,6 +76,11 @@ function Section({
   const mediaItems = section.mediaItems?.filter(
     (item) => item.image || item.fileUrl || item.socialVideoUrl,
   ) ?? [];
+  const headingClass = {
+    small: "text-lg md:text-xl",
+    medium: "text-2xl md:text-3xl",
+    large: "text-3xl md:text-5xl",
+  }[section.headingSize ?? "medium"];
   const columns =
     section.layout === "threeUp"
       ? "md:grid-cols-3"
@@ -88,7 +93,7 @@ function Section({
       {(section.heading || section.bodyRich || section.body) && (
         <div className="w-full space-y-3">
           {section.heading && (
-            <h2 className="text-xs font-medium uppercase tracking-[0.04em]">
+            <h2 className={`${headingClass} font-bold leading-tight tracking-[-0.025em]`}>
               {section.heading}
             </h2>
           )}

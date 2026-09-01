@@ -8,7 +8,12 @@ export const richText = defineType({
   of: [
     defineArrayMember({
       type: "block",
-      styles: [{ title: "Normal", value: "normal" }],
+      styles: [
+        { title: "Normal text", value: "normal" },
+        { title: "Large heading", value: "h2" },
+        { title: "Medium heading", value: "h3" },
+        { title: "Small heading", value: "h4" },
+      ],
       lists: [],
       marks: {
         decorators: [

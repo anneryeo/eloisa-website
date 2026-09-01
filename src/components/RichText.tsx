@@ -21,6 +21,22 @@ const sizeClasses: Record<string, string> = {
 };
 
 const components = {
+  block: {
+    normal: ({ children }: { children?: React.ReactNode }) => <p>{children}</p>,
+    h2: ({ children }: { children?: React.ReactNode }) => (
+      <h2 className="pt-3 text-3xl font-bold leading-tight tracking-[-0.025em] md:text-4xl">
+        {children}
+      </h2>
+    ),
+    h3: ({ children }: { children?: React.ReactNode }) => (
+      <h3 className="pt-2 text-2xl font-bold leading-tight tracking-[-0.02em] md:text-3xl">
+        {children}
+      </h3>
+    ),
+    h4: ({ children }: { children?: React.ReactNode }) => (
+      <h4 className="pt-1 text-lg font-bold leading-snug md:text-xl">{children}</h4>
+    ),
+  },
   marks: {
     underline: ({ children }: { children?: React.ReactNode }) => (
       <span className="underline underline-offset-2">{children}</span>

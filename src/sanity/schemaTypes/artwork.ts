@@ -249,6 +249,22 @@ export const artwork = defineType({
               type: "string",
             }),
             defineField({
+              name: "headingSize",
+              title: "Heading size",
+              description: "Choose how prominent this section heading should be.",
+              type: "string",
+              options: {
+                list: [
+                  { title: "Small", value: "small" },
+                  { title: "Medium", value: "medium" },
+                  { title: "Large", value: "large" },
+                ],
+                layout: "radio",
+              },
+              initialValue: "medium",
+              hidden: ({ parent }) => !parent?.heading,
+            }),
+            defineField({
               name: "body",
               title: "Body (existing plain text)",
               type: "text",

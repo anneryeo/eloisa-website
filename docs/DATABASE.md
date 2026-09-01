@@ -40,6 +40,8 @@ For more than one media item, add a **Case study section**, choose its layout, t
 
 Every formatted description/body editor supports Bold, Italic, Underline, Strikethrough, hyperlinks, and controlled font/size changes. Select the text first, then choose **Link** or **Font and size** from the annotation toolbar. Titles, slugs, navigation labels, and other structural fields intentionally remain plain text so formatting cannot break routing or navigation.
 
+Formatted text also has **Large heading**, **Medium heading**, and **Small heading** block styles. Case study sections provide a separate **Heading size** control; section headings render bold by default so they remain visually distinct from body copy.
+
 ## Why media is modeled this way
 
 - **Images** go through Sanity's transform pipeline so the site can request exactly the sizes it needs — the source stays high-resolution while the browser gets a lean AVIF/WebP.

@@ -61,6 +61,7 @@ export interface CaseStudySection {
   _key: string;
   layout: CaseStudyLayout;
   heading?: string;
+  headingSize?: "small" | "medium" | "large";
   body?: string;
   bodyRich?: unknown[];
   images?: CaseStudyImage[];
@@ -111,6 +112,7 @@ const CASE_STUDY_FIELDS = `
     _key,
     layout,
     heading,
+    "headingSize": coalesce(headingSize, "medium"),
     body,
     bodyRich,
     "mediaItems": mediaItems[]{
