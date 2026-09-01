@@ -14,10 +14,10 @@ const fontClasses: Record<string, string> = {
 };
 
 const sizeClasses: Record<string, string> = {
-  small: "text-xs",
-  normal: "text-sm",
-  large: "text-lg",
-  xlarge: "text-2xl",
+  small: "text-[0.625rem]",
+  normal: "text-[0.6875rem]",
+  large: "text-sm",
+  xlarge: "text-lg",
 };
 
 const components = {

@@ -55,7 +55,7 @@ export default async function AboutMePage() {
           {about?.heading ?? FALLBACK_HEADING}
         </h1>
 
-        <div className="space-y-5 text-justify text-sm font-light leading-[1.9] text-ink">
+        <div className="space-y-5 text-justify text-[0.6875rem] font-light leading-[1.9] text-ink">
           {about?.bio ? <RichText value={about.bio} /> : FALLBACK_BIO}
         </div>
       </section>

@@ -22,7 +22,7 @@ export default async function ContactPage() {
       <SectionHeading>{contact?.heading ?? "Contact"}</SectionHeading>
       <RichText
         value={contact?.intro}
-        className="mb-10 w-full text-justify text-sm font-light leading-[1.9] text-muted"
+        className="mb-10 w-full text-justify text-[0.6875rem] font-light leading-[1.9] text-muted"
       />
       <dl className="space-y-5">
         {methods.map((method) => (
