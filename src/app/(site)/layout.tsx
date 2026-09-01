@@ -1,5 +1,4 @@
 import { CursorSparkles } from "@/components/site/CursorSparkles";
-import { PolkaDotBackground } from "@/components/site/PolkaDotBackground";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { SiteSidebar } from "@/components/site/SiteSidebar";
 import { urlForImage } from "@/sanity/image";
@@ -29,7 +28,7 @@ export default async function SiteLayout({
 
   return (
     <div
-      className="polka-site cursor-funky relative isolate min-h-screen px-7 py-10 lg:px-12 lg:py-0"
+      className="cursor-funky relative isolate min-h-screen px-7 py-10 lg:px-12 lg:py-0"
       style={
         customCursor
           ? ({
@@ -38,7 +37,6 @@ export default async function SiteLayout({
           : undefined
       }
     >
-      <PolkaDotBackground />
       <CursorSparkles />
       <div className="relative z-10 mx-auto grid max-w-[1600px] grid-cols-1 gap-10 lg:grid-cols-[minmax(220px,300px)_1fr] lg:gap-20">
         <SiteSidebar settings={settings} />

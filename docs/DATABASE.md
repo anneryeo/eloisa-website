@@ -1,6 +1,6 @@
 # Content model (Sanity)
 
-Content lives in **Sanity**, a headless CMS. There is no traditional database to run — Sanity hosts the content and serves media from its global CDN. You edit content in the Studio at `/studio`.
+Content lives in **Sanity**, a headless CMS. There is no traditional database to run — Sanity hosts the content and serves media from its global CDN. The client-facing editor is [eloisa.sanity.studio](https://eloisa.sanity.studio/). The `/studio` route is a secondary copy for development and emergency access.
 
 ## Creating a Sanity project
 
@@ -15,31 +15,31 @@ Content lives in **Sanity**, a headless CMS. There is no traditional database to
 
 4. Restart `npm run dev` and open <http://localhost:3000/studio> to start adding work.
 
-> The schema is defined in code (`src/sanity/schemaTypes/`), not in the Sanity UI. Deploying the app deploys the schema.
+> The schema is defined in code (`src/sanity/schemaTypes/`), not in the Sanity UI. Deploy the standalone Studio separately with `npx sanity deploy --yes --schema-required`; deploying the Next.js site alone does not update `eloisa.sanity.studio`.
 
 ## Schema types
 
 ### `artwork`
 
-The core piece. Media is one of three kinds, chosen by the **Media type** field:
+The core piece. Media is one of four kinds, chosen by the **Media type** field:
 
 | Media type | Field    | Delivery                                                              |
 | ---------- | -------- | -------------------------------------------------------------------- |
 | `image`    | `image`  | Sanity image pipeline — hotspot crop, on-the-fly resize/format       |
 | `video`    | `video` + `poster` | File asset streamed from the CDN, with a still poster      |
+| `socialVideo` | `socialVideoUrl` | Embedded public YouTube video/Short, Instagram post/Reel, or TikTok video |
 | `gif`      | `gif`    | File asset (kept as a file so animation is preserved)                |
 
-Other fields: `title`, `slug`, `category` (reference), `year`, `medium`, `dimensions`, `description`, `featured` (surface on the front gallery), `order` (sort — lower first).
+Other fields: `title`, `slug`, `year`, `medium`, `dimensions`, formatted descriptions, `featured` (surface on the front gallery), and `order` (sort — lower first). Legacy category and Personal/Professional values remain stored for compatibility but are no longer shown to editors.
 
-### `category`
-
-A grouping (series / medium / collection): `title`, `slug`, `description`.
+To add a social preview, choose **Social video link**, paste the public post URL, and publish. Use the canonical browser URL—not a creator profile, shortened Instagram redirect, or private post. The site validates supported hosts and turns the URL into an embedded player.
 
 ## Why media is modeled this way
 
 - **Images** go through Sanity's transform pipeline so the site can request exactly the sizes it needs — the source stays high-resolution while the browser gets a lean AVIF/WebP.
 - **GIFs** are stored as **file** assets, not images. The image pipeline would flatten them to a single frame; as a file, the animation survives.
 - **Videos** are file assets with a separate poster still, so the gallery shows a crisp frame instantly and streams the clip on play.
+- **Social videos** stay hosted by YouTube, Instagram, or TikTok. Their privacy settings, availability, cookies, and platform embed rules still apply.
 
 ## How the site reads content
 

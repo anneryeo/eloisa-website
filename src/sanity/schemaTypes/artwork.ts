@@ -29,6 +29,8 @@ export const artwork = defineType({
     defineField({
       name: "mediaType",
       title: "Media type",
+      description:
+        "Choose what visitors should see. For YouTube, Instagram, or TikTok, choose Social video link and paste the public post URL.",
       type: "string",
       options: {
         list: [
@@ -64,8 +66,7 @@ export const artwork = defineType({
       description: "Shown before the video plays and as a fallback.",
       type: "image",
       options: { hotspot: true },
-      hidden: ({ parent }) =>
-        parent?.mediaType !== "video" && parent?.mediaType !== "socialVideo",
+      hidden: ({ parent }) => parent?.mediaType !== "video",
     }),
     defineField({
       name: "socialVideoUrl",
@@ -100,28 +101,6 @@ export const artwork = defineType({
       type: "file",
       options: { accept: "image/gif" },
       hidden: ({ parent }) => parent?.mediaType !== "gif",
-    }),
-    defineField({
-      name: "workType",
-      title: "Work type",
-      description:
-        "Which list this piece appears under when Work is expanded in the nav.",
-      type: "string",
-      options: {
-        list: [
-          { title: "Personal", value: "personal" },
-          { title: "Professional", value: "professional" },
-        ],
-        layout: "radio",
-      },
-      initialValue: "professional",
-      validation: (rule) => rule.required(),
-    }),
-    defineField({
-      name: "category",
-      title: "Category",
-      type: "reference",
-      to: [{ type: "category" }],
     }),
     defineField({
       name: "year",
@@ -164,7 +143,7 @@ export const artwork = defineType({
       name: "descriptionAboveRich",
       title: "Description above artwork",
       description:
-        "Formatted introduction. When empty, the existing plain-text description remains visible.",
+        "Introduction shown under the title. Select text in the editor to use Bold, Italic, Underline, or Strikethrough.",
       type: "richText",
     }),
     defineField({
@@ -180,7 +159,7 @@ export const artwork = defineType({
       name: "descriptionBelowRich",
       title: "Description below artwork",
       description:
-        "Formatted closing text. When empty, the existing plain-text description remains visible.",
+        "Optional closing text below the main artwork. Select text to reveal the formatting controls.",
       type: "richText",
     }),
     defineField({
@@ -243,7 +222,7 @@ export const artwork = defineType({
               name: "bodyRich",
               title: "Body",
               description:
-                "Formatted section text. When empty, the existing plain-text body remains visible.",
+                "Optional section copy. Select text to reveal Bold, Italic, Underline, and Strikethrough.",
               type: "richText",
             }),
             defineField({

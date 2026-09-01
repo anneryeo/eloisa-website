@@ -1,6 +1,6 @@
 import { defineArrayMember, defineType } from "sanity";
 
-/** Shared editorial text with the four requested inline formatting controls. */
+/** Shared editorial text with a deliberately small, client-friendly toolbar. */
 export const richText = defineType({
   name: "richText",
   title: "Formatted text",

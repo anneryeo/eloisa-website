@@ -146,7 +146,7 @@ export async function getWorkProject(
 
   try {
     const projects = await client.fetch<Artwork[]>(
-      `*[_type == "artwork" && workType == $workType] | order(order asc){${CASE_STUDY_FIELDS}}`,
+      `*[_type == "artwork" && coalesce(workType, "professional") == $workType] | order(order asc){${CASE_STUDY_FIELDS}}`,
       { workType },
     );
     const index = projects.findIndex((project) => project.slug === slug);
