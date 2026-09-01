@@ -226,20 +226,130 @@ export const artwork = defineType({
               type: "richText",
             }),
             defineField({
-              name: "images",
-              title: "Images",
+              name: "mediaItems",
+              title: "Media",
               description:
-                "Add one image for full-width, two for split, or three for the three-photo layout.",
+                "Add and reorder pictures, uploaded videos, GIFs, or public YouTube, Instagram, and TikTok links.",
+              type: "array",
+              of: [
+                {
+                  type: "object",
+                  name: "projectMediaItem",
+                  title: "Media item",
+                  fields: [
+                    defineField({
+                      name: "mediaType",
+                      title: "Media type",
+                      type: "string",
+                      options: {
+                        list: [
+                          { title: "Picture", value: "image" },
+                          { title: "Uploaded video", value: "video" },
+                          { title: "Social video link", value: "socialVideo" },
+                          { title: "GIF", value: "gif" },
+                        ],
+                        layout: "radio",
+                      },
+                      initialValue: "image",
+                      validation: (rule) => rule.required(),
+                    }),
+                    defineField({
+                      name: "image",
+                      title: "Picture",
+                      type: "image",
+                      options: { hotspot: true },
+                      hidden: ({ parent }) => parent?.mediaType !== "image",
+                    }),
+                    defineField({
+                      name: "video",
+                      title: "Video file",
+                      type: "file",
+                      options: { accept: "video/mp4,video/webm" },
+                      hidden: ({ parent }) => parent?.mediaType !== "video",
+                    }),
+                    defineField({
+                      name: "poster",
+                      title: "Video poster (still)",
+                      type: "image",
+                      options: { hotspot: true },
+                      hidden: ({ parent }) => parent?.mediaType !== "video",
+                    }),
+                    defineField({
+                      name: "socialVideoUrl",
+                      title: "Social video URL",
+                      description:
+                        "Paste a public YouTube video/Short, Instagram post/Reel, or TikTok video URL.",
+                      type: "url",
+                      hidden: ({ parent }) => parent?.mediaType !== "socialVideo",
+                      validation: (rule) =>
+                        rule.uri({ scheme: ["http", "https"] }).custom((value, context) => {
+                          if ((context.parent as { mediaType?: string })?.mediaType !== "socialVideo") return true;
+                          if (!value) return "A social video URL is required.";
+                          try {
+                            const host = new URL(value).hostname.replace(/^www\./, "");
+                            return ["youtube.com", "youtu.be", "instagram.com", "tiktok.com"].some(
+                              (domain) => host === domain || host.endsWith(`.${domain}`),
+                            )
+                              ? true
+                              : "Use a YouTube, Instagram, or TikTok URL.";
+                          } catch {
+                            return "Enter a valid URL.";
+                          }
+                        }),
+                    }),
+                    defineField({
+                      name: "gif",
+                      title: "GIF file",
+                      type: "file",
+                      options: { accept: "image/gif" },
+                      hidden: ({ parent }) => parent?.mediaType !== "gif",
+                    }),
+                    defineField({
+                      name: "caption",
+                      title: "Caption / alt text",
+                      description: "A short description for accessibility; optional for decorative media.",
+                      type: "string",
+                    }),
+                  ],
+                  preview: {
+                    select: {
+                      mediaType: "mediaType",
+                      caption: "caption",
+                      media: "image",
+                    },
+                    prepare({ mediaType, caption, media }) {
+                      const labels: Record<string, string> = {
+                        image: "Picture",
+                        video: "Uploaded video",
+                        socialVideo: "Social video",
+                        gif: "GIF",
+                      };
+                      return {
+                        title: caption || labels[mediaType] || "Choose a media type",
+                        subtitle: labels[mediaType],
+                        media,
+                      };
+                    },
+                  },
+                },
+              ],
+              validation: (rule) => rule.max(3),
+            }),
+            defineField({
+              name: "images",
+              title: "Previous pictures",
+              description: "Existing section pictures are preserved here for compatibility.",
               type: "array",
               of: [{ type: "image", options: { hotspot: true } }],
-              validation: (rule) => rule.max(3),
+              readOnly: true,
+              hidden: true,
             }),
           ],
           preview: {
             select: {
               title: "heading",
               layout: "layout",
-              media: "images.0",
+              media: "mediaItems.0.image",
             },
             prepare({ title, layout, media }) {
               const labels: Record<string, string> = {
@@ -284,6 +394,13 @@ export const artwork = defineType({
       title: "title",
       subtitle: "medium",
       media: "image",
+    },
+    prepare({ title, subtitle, media }) {
+      return {
+        title: title || "Untitled artwork",
+        subtitle: subtitle || "Add medium (optional)",
+        media,
+      };
     },
   },
 });

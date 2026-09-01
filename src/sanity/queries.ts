@@ -41,6 +41,17 @@ export interface CaseStudyImage {
   aspectRatio?: number;
 }
 
+export interface CaseStudyMediaItem {
+  _key: string;
+  mediaType: MediaType;
+  image?: unknown;
+  poster?: unknown;
+  fileUrl?: string;
+  socialVideoUrl?: string;
+  aspectRatio?: number;
+  caption?: string;
+}
+
 export interface CaseStudySection {
   _key: string;
   layout: CaseStudyLayout;
@@ -48,6 +59,7 @@ export interface CaseStudySection {
   body?: string;
   bodyRich?: unknown[];
   images?: CaseStudyImage[];
+  mediaItems?: CaseStudyMediaItem[];
 }
 
 const FIELDS = `
@@ -92,6 +104,22 @@ const CASE_STUDY_FIELDS = `
     heading,
     body,
     bodyRich,
+    "mediaItems": mediaItems[]{
+      _key,
+      mediaType,
+      image,
+      poster,
+      socialVideoUrl,
+      caption,
+      "fileUrl": select(
+        mediaType == "video" => video.asset->url,
+        mediaType == "gif" => gif.asset->url
+      ),
+      "aspectRatio": coalesce(
+        image.asset->metadata.dimensions.aspectRatio,
+        poster.asset->metadata.dimensions.aspectRatio
+      )
+    },
     "images": images[]{
       _key,
       "image": @,

@@ -34,6 +34,8 @@ Other fields: `title`, `slug`, `year`, `medium`, `dimensions`, formatted descrip
 
 To add a social preview, choose **Social video link**, paste the public post URL, and publish. Use the canonical browser URL—not a creator profile, shortened Instagram redirect, or private post. The site validates supported hosts and turns the URL into an embedded player.
 
+For more than one media item, add a **Case study section**, choose its layout, then add up to three items under **Media**. Each section can mix pictures, uploaded MP4/WebM videos, GIFs, and supported social-video links. Add more sections when a project needs more than three items or a different layout.
+
 ## Why media is modeled this way
 
 - **Images** go through Sanity's transform pipeline so the site can request exactly the sizes it needs — the source stays high-resolution while the browser gets a lean AVIF/WebP.

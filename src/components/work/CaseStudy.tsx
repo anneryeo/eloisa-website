@@ -6,6 +6,7 @@ import { urlForImage } from "@/sanity/image";
 import type {
   Artwork,
   CaseStudyImage,
+  CaseStudyMediaItem,
   CaseStudySection,
   WorkType,
 } from "@/sanity/queries";
@@ -13,6 +14,30 @@ import { ScrapbookImage } from "./ScrapbookImage";
 
 function imageUrl(image: unknown) {
   return urlForImage(image as object).quality(95).url();
+}
+
+function ProjectMedia({ item, title, priority }: { item: CaseStudyMediaItem; title: string; priority?: boolean }) {
+  return (
+    <div
+      className="relative w-full overflow-hidden bg-placeholder"
+      style={{ aspectRatio: item.aspectRatio ?? 16 / 9 }}
+    >
+      <Media
+        artwork={{
+          _id: item._key,
+          title: item.caption || title,
+          slug: "",
+          mediaType: item.mediaType,
+          image: item.image,
+          poster: item.poster,
+          fileUrl: item.fileUrl,
+          socialVideoUrl: item.socialVideoUrl,
+        }}
+        priority={priority}
+        fullResolution
+      />
+    </div>
+  );
 }
 
 function ProjectImage({
@@ -48,6 +73,9 @@ function Section({
   title: string;
 }) {
   const images = section.images?.filter((item) => item.image) ?? [];
+  const mediaItems = section.mediaItems?.filter(
+    (item) => item.image || item.fileUrl || item.socialVideoUrl,
+  ) ?? [];
   const columns =
     section.layout === "threeUp"
       ? "md:grid-cols-3"
@@ -71,17 +99,25 @@ function Section({
         </div>
       )}
 
-      {images.length > 0 && section.layout !== "text" && (
+      {(mediaItems.length > 0 || images.length > 0) && section.layout !== "text" && (
         <div className={`grid gap-5 md:gap-7 ${columns}`}>
-          {images.map((item, index) => (
-            <ProjectImage
-              key={item._key}
-              item={item}
-              title={`${title} — image ${index + 1}`}
-              seed={`${section._key}-${item._key}`}
-              subtle={section.layout === "full"}
-            />
-          ))}
+          {mediaItems.length > 0
+            ? mediaItems.map((item, index) => (
+                <ProjectMedia
+                  key={item._key}
+                  item={item}
+                  title={`${title} — media ${index + 1}`}
+                />
+              ))
+            : images.map((item, index) => (
+                <ProjectImage
+                  key={item._key}
+                  item={item}
+                  title={`${title} — image ${index + 1}`}
+                  seed={`${section._key}-${item._key}`}
+                  subtle={section.layout === "full"}
+                />
+              ))}
         </div>
       )}
     </section>
