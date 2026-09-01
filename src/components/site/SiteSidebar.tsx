@@ -47,7 +47,7 @@ export function SiteSidebar({ settings }: { settings: SiteSettings | null }) {
 
       <RichText
         value={settings?.bioRich ?? settings?.bio ?? FALLBACK_BIO}
-        className="max-w-[34ch] text-[0.6875rem] font-light leading-[1.9] text-ink"
+        className="max-w-[34ch] text-xs font-light leading-[1.9] text-ink"
       />
 
       <div className="hidden lg:block">

@@ -99,7 +99,7 @@ function Section({
           )}
           <RichText
             value={section.bodyRich ?? section.body}
-            className="text-justify text-[0.6875rem] font-light leading-[1.9]"
+            className="text-justify text-xs font-light leading-[1.9]"
           />
         </div>
       )}
@@ -187,7 +187,7 @@ export function CaseStudy({
             project.descriptionAbove ??
             project.description
           }
-          className="w-full pt-2 text-justify text-[0.6875rem] font-light leading-[1.9]"
+          className="w-full pt-2 text-justify text-xs font-light leading-[1.9]"
         />
       </header>
 
@@ -221,7 +221,7 @@ export function CaseStudy({
             )}
             <RichText
               value={project.descriptionBelowRich ?? project.descriptionBelow}
-              className="w-full text-justify text-[0.6875rem] font-light leading-[1.9]"
+              className="w-full text-justify text-xs font-light leading-[1.9]"
             />
           </section>
         )}

@@ -15,7 +15,7 @@ const fontClasses: Record<string, string> = {
 
 const sizeClasses: Record<string, string> = {
   small: "text-[0.625rem]",
-  normal: "text-[0.6875rem]",
+  normal: "text-xs",
   large: "text-sm",
   xlarge: "text-lg",
 };
