@@ -2,6 +2,24 @@ import { PortableText } from "next-sanity";
 
 import { cx } from "@/lib/cx";
 
+function safeHref(value?: string) {
+  if (!value || !/^(https?:\/\/|mailto:|tel:|\/|#)/i.test(value)) return "#";
+  return value;
+}
+
+const fontClasses: Record<string, string> = {
+  sans: "font-sans",
+  display: "font-display",
+  mono: "font-mono",
+};
+
+const sizeClasses: Record<string, string> = {
+  small: "text-xs",
+  normal: "text-sm",
+  large: "text-lg",
+  xlarge: "text-2xl",
+};
+
 const components = {
   marks: {
     underline: ({ children }: { children?: React.ReactNode }) => (
@@ -9,6 +27,43 @@ const components = {
     ),
     "strike-through": ({ children }: { children?: React.ReactNode }) => (
       <s>{children}</s>
+    ),
+    link: ({
+      children,
+      value,
+    }: {
+      children?: React.ReactNode;
+      value?: { href?: string; openInNewTab?: boolean };
+    }) => {
+      const href = safeHref(value?.href);
+      const external = /^https?:\/\//i.test(href);
+      const newTab = value?.openInNewTab && external;
+      return (
+        <a
+          href={href}
+          className="underline decoration-current underline-offset-2 transition-colors hover:text-accent"
+          target={newTab ? "_blank" : undefined}
+          rel={newTab ? "noreferrer noopener" : undefined}
+        >
+          {children}
+        </a>
+      );
+    },
+    textStyle: ({
+      children,
+      value,
+    }: {
+      children?: React.ReactNode;
+      value?: { font?: string; size?: string };
+    }) => (
+      <span
+        className={cx(
+          value?.font ? fontClasses[value.font] : undefined,
+          value?.size ? sizeClasses[value.size] : undefined,
+        )}
+      >
+        {children}
+      </span>
     ),
   },
 };

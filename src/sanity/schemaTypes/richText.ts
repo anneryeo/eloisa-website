@@ -1,4 +1,4 @@
-import { defineArrayMember, defineType } from "sanity";
+import { defineArrayMember, defineField, defineType } from "sanity";
 
 /** Shared editorial text with a deliberately small, client-friendly toolbar. */
 export const richText = defineType({
@@ -17,7 +17,68 @@ export const richText = defineType({
           { title: "Underline", value: "underline" },
           { title: "Strikethrough", value: "strike-through" },
         ],
-        annotations: [],
+        annotations: [
+          {
+            name: "link",
+            title: "Link",
+            type: "object",
+            fields: [
+              defineField({
+                name: "href",
+                title: "Link destination",
+                description:
+                  "Paste a full web address, email link, phone link, or an internal path such as /about.",
+                type: "string",
+                validation: (rule) =>
+                  rule.required().custom((value) => {
+                    if (!value) return true;
+                    if (/^(https?:\/\/|mailto:|tel:|\/|#)/i.test(value)) return true;
+                    return "Use https://, http://, mailto:, tel:, /path, or #section.";
+                  }),
+              }),
+              defineField({
+                name: "openInNewTab",
+                title: "Open in a new tab",
+                type: "boolean",
+                initialValue: true,
+              }),
+            ],
+          },
+          {
+            name: "textStyle",
+            title: "Font and size",
+            type: "object",
+            fields: [
+              defineField({
+                name: "font",
+                title: "Font style",
+                type: "string",
+                options: {
+                  list: [
+                    { title: "Default (Poppins)", value: "sans" },
+                    { title: "Handwritten", value: "display" },
+                    { title: "Typewriter", value: "mono" },
+                  ],
+                },
+                initialValue: "sans",
+              }),
+              defineField({
+                name: "size",
+                title: "Font size",
+                type: "string",
+                options: {
+                  list: [
+                    { title: "Small", value: "small" },
+                    { title: "Normal", value: "normal" },
+                    { title: "Large", value: "large" },
+                    { title: "Extra large", value: "xlarge" },
+                  ],
+                },
+                initialValue: "normal",
+              }),
+            ],
+          },
+        ],
       },
     }),
   ],

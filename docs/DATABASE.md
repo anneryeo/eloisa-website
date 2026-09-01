@@ -38,6 +38,8 @@ To add a social preview, choose **Social video link**, paste the public post URL
 
 For more than one media item, add a **Case study section**, choose its layout, then add up to three items under **Media**. Each section can mix pictures, uploaded MP4/WebM videos, GIFs, and supported social-video links. Add more sections when a project needs more than three items or a different layout.
 
+Every formatted description/body editor supports Bold, Italic, Underline, Strikethrough, hyperlinks, and controlled font/size changes. Select the text first, then choose **Link** or **Font and size** from the annotation toolbar. Titles, slugs, navigation labels, and other structural fields intentionally remain plain text so formatting cannot break routing or navigation.
+
 ## Why media is modeled this way
 
 - **Images** go through Sanity's transform pipeline so the site can request exactly the sizes it needs — the source stays high-resolution while the browser gets a lean AVIF/WebP.
