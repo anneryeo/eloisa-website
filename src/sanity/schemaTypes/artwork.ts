@@ -12,17 +12,25 @@ export const artwork = defineType({
   name: "artwork",
   title: "Artwork",
   type: "document",
+  groups: [
+    { name: "basics", title: "1. Basics", default: true },
+    { name: "grid", title: "2. Grid preview" },
+    { name: "project", title: "3. Project page" },
+    { name: "publishing", title: "4. Publishing" },
+  ],
   fields: [
     defineField({
       name: "title",
       title: "Title",
       type: "string",
+      group: "basics",
       validation: (rule) => rule.required(),
     }),
     defineField({
       name: "slug",
       title: "Slug",
       type: "slug",
+      group: "basics",
       options: { source: "title", maxLength: 96 },
       validation: (rule) => rule.required(),
     }),
@@ -32,6 +40,7 @@ export const artwork = defineType({
       description:
         "Choose media used only on the Work grid. Reuse main media keeps the project’s primary picture or video.",
       type: "string",
+      group: "grid",
       options: {
         list: [
           { title: "Reuse main media", value: "main" },
@@ -50,6 +59,7 @@ export const artwork = defineType({
       description:
         "A separate picture used only on the Work grid. Adjust its crop with the hotspot tool.",
       type: "image",
+      group: "grid",
       options: { hotspot: true },
       hidden: ({ parent }) => parent?.gridPreviewType !== "image",
     }),
@@ -58,6 +68,7 @@ export const artwork = defineType({
       title: "Grid video",
       description: "Upload an MP4 or WebM. It plays muted, automatically, and on a loop.",
       type: "file",
+      group: "grid",
       options: { accept: "video/mp4,video/webm" },
       hidden: ({ parent }) => parent?.gridPreviewType !== "video",
     }),
@@ -66,6 +77,7 @@ export const artwork = defineType({
       title: "Grid video poster",
       description: "Optional still shown while the looping video loads.",
       type: "image",
+      group: "grid",
       options: { hotspot: true },
       hidden: ({ parent }) => parent?.gridPreviewType !== "video",
     }),
@@ -73,6 +85,7 @@ export const artwork = defineType({
       name: "gridGif",
       title: "Grid GIF",
       type: "file",
+      group: "grid",
       options: { accept: "image/gif" },
       hidden: ({ parent }) => parent?.gridPreviewType !== "gif",
     }),
@@ -82,6 +95,7 @@ export const artwork = defineType({
       description:
         "Paste a public YouTube, Instagram, or TikTok video URL. Muted autoplay is requested but the platform or visitor’s browser may block it.",
       type: "url",
+      group: "grid",
       hidden: ({ parent }) => parent?.gridPreviewType !== "socialVideo",
       validation: (rule) =>
         rule.uri({ scheme: ["http", "https"] }).custom((value, context) => {
@@ -105,6 +119,7 @@ export const artwork = defineType({
       description:
         "Choose what visitors should see. For YouTube, Instagram, or TikTok, choose Social video link and paste the public post URL.",
       type: "string",
+      group: "basics",
       options: {
         list: [
           { title: "Image", value: "image" },
@@ -121,6 +136,7 @@ export const artwork = defineType({
       name: "image",
       title: "Image",
       type: "image",
+      group: "basics",
       // Hotspot lets editors pick the focal point; crops stay art-directed
       // across every responsive size.
       options: { hotspot: true },
@@ -130,6 +146,7 @@ export const artwork = defineType({
       name: "video",
       title: "Video file",
       type: "file",
+      group: "basics",
       options: { accept: "video/mp4,video/webm" },
       hidden: ({ parent }) => parent?.mediaType !== "video",
     }),
@@ -138,6 +155,7 @@ export const artwork = defineType({
       title: "Video poster (still)",
       description: "Shown before the video plays and as a fallback.",
       type: "image",
+      group: "basics",
       options: { hotspot: true },
       hidden: ({ parent }) => parent?.mediaType !== "video",
     }),
@@ -147,6 +165,7 @@ export const artwork = defineType({
       description:
         "Paste a YouTube video/Short, Instagram post/Reel, or TikTok video URL.",
       type: "url",
+      group: "basics",
       hidden: ({ parent }) => parent?.mediaType !== "socialVideo",
       validation: (rule) =>
         rule.uri({ scheme: ["http", "https"] }).custom((value, context) => {
@@ -172,6 +191,7 @@ export const artwork = defineType({
       name: "gif",
       title: "GIF file",
       type: "file",
+      group: "basics",
       options: { accept: "image/gif" },
       hidden: ({ parent }) => parent?.mediaType !== "gif",
     }),
@@ -179,19 +199,8 @@ export const artwork = defineType({
       name: "year",
       title: "Year",
       type: "number",
+      group: "basics",
       validation: (rule) => rule.min(1900).max(2100),
-    }),
-    defineField({
-      name: "medium",
-      title: "Medium",
-      description: 'e.g. "Oil on canvas", "Digital", "Mixed media"',
-      type: "string",
-    }),
-    defineField({
-      name: "dimensions",
-      title: "Dimensions",
-      description: 'e.g. "120 × 90 cm"',
-      type: "string",
     }),
     defineField({
       name: "description",
@@ -218,6 +227,7 @@ export const artwork = defineType({
       description:
         "Introduction shown under the title. Select text in the editor to use Bold, Italic, Underline, or Strikethrough.",
       type: "richText",
+      group: "project",
     }),
     defineField({
       name: "descriptionBelow",
@@ -234,12 +244,14 @@ export const artwork = defineType({
       description:
         "Optional closing text below the main artwork. Select text to reveal the formatting controls.",
       type: "richText",
+      group: "project",
     }),
     defineField({
       name: "projectLabel",
       title: "Project label",
       description: 'Small label above the intro. Defaults to "WORK".',
       type: "string",
+      group: "basics",
       initialValue: "WORK",
     }),
     defineField({
@@ -247,6 +259,7 @@ export const artwork = defineType({
       title: "Main media size on project page",
       description: "Controls the width of the first picture or video after the project title.",
       type: "string",
+      group: "project",
       options: {
         list: [
           { title: "Full width", value: "full" },
@@ -263,6 +276,7 @@ export const artwork = defineType({
       description:
         "Fit shows the whole picture/video with possible empty space. Fill covers the frame and may crop edges.",
       type: "string",
+      group: "project",
       options: {
         list: [
           { title: "Fit — do not crop", value: "contain" },
@@ -278,6 +292,7 @@ export const artwork = defineType({
       description:
         "Optional wide hero for the project page. The main artwork image is used when empty.",
       type: "image",
+      group: "project",
       options: { hotspot: true },
     }),
     defineField({
@@ -286,6 +301,7 @@ export const artwork = defineType({
       description:
         "Build the page in order. Empty projects still show the standard title, intro, and hero layout.",
       type: "array",
+      group: "project",
       of: [
         {
           type: "object",
@@ -491,6 +507,7 @@ export const artwork = defineType({
       name: "featured",
       title: "Featured on front gallery",
       type: "boolean",
+      group: "publishing",
       initialValue: true,
     }),
     defineField({
@@ -498,6 +515,7 @@ export const artwork = defineType({
       title: "Order",
       description: "Lower numbers appear first in the gallery.",
       type: "number",
+      group: "publishing",
       initialValue: 100,
     }),
   ],
@@ -511,13 +529,13 @@ export const artwork = defineType({
   preview: {
     select: {
       title: "title",
-      subtitle: "medium",
+      subtitle: "projectLabel",
       media: "image",
     },
     prepare({ title, subtitle, media }) {
       return {
         title: title || "Untitled artwork",
-        subtitle: subtitle || "Add medium (optional)",
+        subtitle: subtitle || "Artwork",
         media,
       };
     },

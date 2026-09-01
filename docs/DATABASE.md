@@ -23,6 +23,8 @@ Content lives in **Sanity**, a headless CMS. There is no traditional database to
 
 The core piece. Media is one of four kinds, chosen by the **Media type** field:
 
+The Studio editor is organized into four workflow tabs: **1. Basics**, **2. Grid preview**, **3. Project page**, and **4. Publishing**. Conditional upload fields appear only after their matching media type is selected. Legacy Medium, Dimensions, category, and Personal/Professional values remain stored for compatibility but are not shown to editors.
+
 | Media type | Field    | Delivery                                                              |
 | ---------- | -------- | -------------------------------------------------------------------- |
 | `image`    | `image`  | Sanity image pipeline — hotspot crop, on-the-fly resize/format       |
