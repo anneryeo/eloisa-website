@@ -39,7 +39,7 @@ export default async function FaqPage() {
             <dd>
               <RichText
                 value={faq.answerRich ?? faq.answer}
-                className="text-justify text-[0.8125rem] font-light leading-[1.9] text-ink"
+                className="text-justify text-sm font-light leading-[1.9] text-ink"
               />
             </dd>
           </div>

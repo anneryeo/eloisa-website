@@ -143,13 +143,13 @@ function JournalIntro({
     return (
       <RichText
         value={richText}
-        className="mb-10 w-full text-justify text-[0.8125rem] font-light leading-[1.9] text-ink"
+        className="mb-10 w-full text-justify text-sm font-light leading-[1.9] text-ink"
       />
     );
   }
   const lines = paragraphs?.length ? paragraphs : FALLBACK_INTRO;
   return (
-    <div className="mb-10 w-full space-y-4 text-justify text-[0.8125rem] font-light leading-[1.9] text-ink">
+    <div className="mb-10 w-full space-y-4 text-justify text-sm font-light leading-[1.9] text-ink">
       {lines.map((line) => (
         <p key={line}>{line}</p>
       ))}
@@ -420,7 +420,7 @@ function JournalDetail({
             y: 0,
             transition: { duration: 0.45, ease: EASE, delay: 0.25 },
           }}
-          className="mt-8 w-full space-y-4 text-justify text-[0.8125rem] font-light leading-[1.9] text-ink"
+          className="mt-8 w-full space-y-4 text-justify text-sm font-light leading-[1.9] text-ink"
         >
           <RichText
             value={entry.blurbRich ?? entry.blurb}
